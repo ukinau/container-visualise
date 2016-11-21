@@ -1,9 +1,9 @@
 var TextCanvasModel = function(text){
-	BaseCanvasModel.call(this)
-	this.color = 'rgb(0, 0, 0)'
+  BaseCanvasModel.call(this)
+  this.color = 'rgb(0, 0, 0)'
   this.font = "20px sans-serif"
-	this.content = text
-	this.globalAlpha = 1.0
+  this.content = text
+  this.globalAlpha = 1.0
   this.is_bold = true
   this.lineWidth = 2
 }
@@ -13,8 +13,8 @@ TextCanvasModel.prototype.draw = function(ctx){
   var tmp_font = ctx.font
   var tmp_lineWidth = ctx.lineWidth
 
-	ctx.globalAlpha = this.globalAlpha
-	ctx.fillStyle = this.color
+  ctx.globalAlpha = this.globalAlpha
+  ctx.fillStyle = this.color
   ctx.font = this.font
   ctx.lineWidth = this.lineWidth
 

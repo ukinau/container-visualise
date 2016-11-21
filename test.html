@@ -27,64 +27,64 @@
     <script>
       function init(){
         var canvas = document.getElementById("canvas");
-			
+      
         ctx = canvas.getContext("2d");
         ctx.scale(2, 2)
 
         pallet = new Pallet(ctx, canvas)
-				super2 = new DrawObject('super2', {"color": '#C9C9AB', "text-font": "24px sans-serif"})
-				super1 = new DrawObject('super1', {"color": '#88856A', "text-font": "24px sans-serif"})
+        super2 = new DrawObject('super2', {"color": '#C9C9AB', "text-font": "24px sans-serif"})
+        super1 = new DrawObject('super1', {"color": '#88856A', "text-font": "24px sans-serif"})
         child1 = new DrawObject('child1', {"color": '#DBBE32', "x": 60, "y": 240, "width": 100, "height": 70, "globalAlpha": 1.0})
         child2 = new DrawObject('child2', {"color": '#DBBE32', "x": 190, "y": 240, "width": 100, "height": 70})
 
-				child1.configure_super(super1)
-				child2.configure_super(super1)
+        child1.configure_super(super1)
+        child2.configure_super(super1)
         pallet.add_object(child1)
         pallet.add_object(child2)
-				pallet.add_object(super1)
-				pallet.add_object(super2)
-				super1.configure_super(super2)
+        pallet.add_object(super1)
+        pallet.add_object(super2)
+        super1.configure_super(super2)
 
-				super2 = new DrawObject('super4', {"color": 'rgb(219, 190, 50)', "text-font": "24px sans-serif"})
-				super1 = new DrawObject('super3', {"text-font": "24px sans-serif"})
+        super2 = new DrawObject('super4', {"color": 'rgb(219, 190, 50)', "text-font": "24px sans-serif"})
+        super1 = new DrawObject('super3', {"text-font": "24px sans-serif"})
         child1d = new DrawObject('child1d', {"x": 550, "y": 240, "width": 100, "height": 70})
         child2 = new DrawObject('child2d', {"x": 720, "y": 240, "width": 100, "height": 70})
-				child1d.configure_super(super1)
-				child2.configure_super(super1)
+        child1d.configure_super(super1)
+        child2.configure_super(super1)
         pallet.add_object(child1d)
         pallet.add_object(child2)
-				pallet.add_object(super1)
-				pallet.add_object(super2)
-				super1.configure_super(super2)
-				con1 = child1.add_connection_to(child1d)
-				con2 = child1.add_connection_to(child2)
-				pallet.add_object(con1)
-				pallet.add_object(con2)
+        pallet.add_object(super1)
+        pallet.add_object(super2)
+        super1.configure_super(super2)
+        con1 = child1.add_connection_to(child1d)
+        con2 = child1.add_connection_to(child2)
+        pallet.add_object(con1)
+        pallet.add_object(con2)
         pallet.render()
-				pallet.setMouseEventToDocument(document)
+        pallet.setMouseEventToDocument(document)
 
 
-				function connectionHighLight(_this, eventName){
-					var connections = _this.connections
-					for(var i=0; i<connections.length; i++){
-						if(_this == connections[i].from){
-							connections[i].highlight({"color": "blue", "lineWidth": 3})
-						}else{
-							connections[i].highlight({"color": "red", "lineWidth": 3})
-						}
-					}
-					pallet.render()
-				}
-			
-				function connectionUnHighLight(_this, eventName){
-					var connections = _this.connections
-					for(var i=0; i<connections.length; i++){
-						connections[i].unHighlight()
-					}
-					pallet.render()
-				}
-				child1.event_function_register("mousedown", connectionHighLight)
-				child1.event_function_register("mousedown:clear", connectionUnHighLight)
+        function connectionHighLight(_this, eventName){
+          var connections = _this.connections
+          for(var i=0; i<connections.length; i++){
+            if(_this == connections[i].from){
+              connections[i].highlight({"color": "blue", "lineWidth": 3})
+            }else{
+              connections[i].highlight({"color": "red", "lineWidth": 3})
+            }
+          }
+          pallet.render()
+        }
+      
+        function connectionUnHighLight(_this, eventName){
+          var connections = _this.connections
+          for(var i=0; i<connections.length; i++){
+            connections[i].unHighlight()
+          }
+          pallet.render()
+        }
+        child1.event_function_register("mousedown", connectionHighLight)
+        child1.event_function_register("mousedown:clear", connectionUnHighLight)
         child1d.event_function_register("mousedown", connectionHighLight)
         child1d.event_function_register("mousedown:clear", connectionUnHighLight)
 

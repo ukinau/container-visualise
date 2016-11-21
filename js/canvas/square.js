@@ -1,6 +1,6 @@
 var SquareCanvasModel = function(text){ 
   BaseCanvasModel.call(this)
-	this.color = 'rgb(155, 187, 89)'
+  this.color = 'rgb(155, 187, 89)'
   this.globalAlpha = 1.0
   this.radius = 15
   this.lineWidth = 3
@@ -19,15 +19,15 @@ SquareCanvasModel.prototype.calculate = function(){
   this.text.canvas.z_index = this.z_index
 }
 SquareCanvasModel.prototype.draw = function(ctx){
-	// draw square
+  // draw square
   var tmp_globalAlpha = ctx.globalAlpha
   var tmp_lineWidth = ctx.lineWidth
   var tmp_fillStyle = ctx.fillStyle
 
-	ctx.globalAlpha = this.globalAlpha
+  ctx.globalAlpha = this.globalAlpha
   ctx.lineWidth = this.lineWidth
-	ctx.fillStyle = this.color
-	//ctx.fillRect(this.possitionX, this.possitionY, this.width, this.height)
+  ctx.fillStyle = this.color
+  //ctx.fillRect(this.possitionX, this.possitionY, this.width, this.height)
   // Rounded square
   ctx.beginPath();
   ctx.moveTo(this.possitionX+this.radius, this.possitionY);
