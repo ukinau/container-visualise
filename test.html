@@ -14,19 +14,23 @@
 
     <style>
       canvas{
+         width:  2000px;
+         height: 1000px;
+         border: 1px solid #000000;
       }
     </style>
   </head>
 
   <body onload="init()" style="margin:0px">
-    <canvas id="canvas" width="3400" height="900" style="width:1700; height:450px;"></canvas>
+    <canvas id="canvas" width="4000" height="2000"></canvas>
 
     <script>
       function init(){
         var canvas = document.getElementById("canvas");
 			
         ctx = canvas.getContext("2d");
-				ctx.scale(2,2);
+        ctx.scale(2, 2)
+
         pallet = new Pallet(ctx, canvas)
 				super2 = new DrawObject('super2', {"color": '#C9C9AB', "text-font": "24px sans-serif"})
 				super1 = new DrawObject('super1', {"color": '#88856A', "text-font": "24px sans-serif"})
@@ -84,6 +88,17 @@
         child1d.event_function_register("mousedown", connectionHighLight)
         child1d.event_function_register("mousedown:clear", connectionUnHighLight)
 
+      var text_desc = 'This is sample:\nThe text field calls this method whenever the user taps the return button. You can use this method to implement any custom behavior when the button is tapped. For example, if you want to dismiss the keyboard when the user taps the return button, your implementation can call the resignFirstResponder( method. )'
+      var textbox =  new TextboxSquare(ctx, text_desc)
+      textbox.possitionX = 200
+      textbox.possitionY = 400
+      textbox.width = 300
+      textbox.height = 200
+      textbox.color = "rgb(250, 250, 250)"
+      textbox.globalAlpha = 0.8
+      textbox.text.canvas.font = "15px sans-serif"
+      textbox.text.canvas.is_bold = false
+      textbox.draw(ctx)
       }
 
     </script>

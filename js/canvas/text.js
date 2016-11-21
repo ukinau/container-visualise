@@ -4,6 +4,7 @@ var TextCanvasModel = function(text){
   this.font = "20px sans-serif"
 	this.content = text
 	this.globalAlpha = 1.0
+  this.is_bold = true
   this.lineWidth = 2
 }
 TextCanvasModel.prototype.draw = function(ctx){
@@ -17,8 +18,10 @@ TextCanvasModel.prototype.draw = function(ctx){
   ctx.font = this.font
   ctx.lineWidth = this.lineWidth
 
-	ctx.strokeText(this.content, this.possitionX, this.possitionY)
-	ctx.fillText(this.content, this.possitionX, this.possitionY)
+  if(this.is_bold){
+    ctx.strokeText(this.content, this.possitionX, this.possitionY)
+  }
+  ctx.fillText(this.content, this.possitionX, this.possitionY)
 
   ctx.font = tmp_font
   ctx.globalAlpha = tmp_globalAlpha
@@ -30,14 +33,7 @@ TextCanvasModel.prototype.get_px_width = function(){
 }
 //TODO
 TextCanvasModel.prototype.get_px_height = function(){
-  return (Number(this.font.match(/([0-9].)px/)[1])/2)
+  return Number(this.font.match(/([0-9].)px/)[1])
 }
 
-
-//TODO
-//this class is a little special to need the context of canvas
-//because need to calculate the point to start new line
-TextBoxCanvas = function(text){
-  TextCanvasModel.call(this)
-}
 inherits(TextCanvasModel, BaseCanvasModel)

@@ -3,6 +3,7 @@ var SquareCanvasModel = function(text){
 	this.color = 'rgb(155, 187, 89)'
   this.globalAlpha = 1.0
   this.radius = 15
+  this.lineWidth = 3
   this.text = {}
   this.text.canvas = new TextCanvasModel(text)
 }
@@ -16,11 +17,10 @@ SquareCanvasModel.prototype.calculate = function(){
   this.text.canvas.possitionX = this.possitionX + m_l
   this.text.canvas.possitionY = this.possitionY + 20
   this.text.canvas.z_index = this.z_index
-  this.lineWidth = 3
 }
 SquareCanvasModel.prototype.draw = function(ctx){
 	// draw square
-  var tmp_globalAlpha = ctx.globalAlpha 
+  var tmp_globalAlpha = ctx.globalAlpha
   var tmp_lineWidth = ctx.lineWidth
   var tmp_fillStyle = ctx.fillStyle
 
@@ -50,9 +50,9 @@ SquareCanvasModel.prototype.draw = function(ctx){
   ctx.fill();
   ctx.stroke();
 
-	ctx.globalAlpha = 1.0
-	this.calculate()
-	this.text.canvas.draw(ctx)
+  ctx.globalAlpha = 1.0
+  this.calculate()
+  this.text.canvas.draw(ctx)
   ctx.globalAlpha = tmp_globalAlpha 
   ctx.lineWidth = tmp_lineWidth
   ctx.fillStyle = tmp_fillStyle
@@ -72,7 +72,7 @@ SquareCanvasModel.prototype.get_aspects = function(){
     },
     "top":{
       "begin":{"x": this.possitionX, "y":this.possitionY},
-      "end": {"x": this.get_possitionX_end(), "y":this.possitionY} 
+      "end": {"x": this.get_possitionX_end(), "y":this.possitionY}
     },
     "down":{
       "begin": {"x": this.possitionX, "y": this.get_possitionY_end()},
@@ -82,3 +82,85 @@ SquareCanvasModel.prototype.get_aspects = function(){
   return results
 }
 inherits(SquareCanvasModel, BaseCanvasModel)
+
+
+
+//TODO
+//this class is a little special to need the context of canvas
+//because need to calculate the point to start new line
+//Textbox Square
+var TextboxSquare = function(ctx, text){
+  SquareCanvasModel.call(this, text)
+  this.lines = 0
+  this.text_turned = [] //TextCanvas
+  this.ctx = ctx
+  this.text.margin_left = 5
+  this.text.margin_top = 3
+  this.text.init_margin_top = 20
+}
+
+TextboxSquare.prototype.draw = function(ctx){
+  var tmp_globalAlpha = ctx.globalAlpha
+  var tmp_lineWidth = ctx.lineWidth
+  var tmp_fillStyle = ctx.fillStyle
+  ctx.globalAlpha = this.globalAlpha
+  ctx.lineWidth = this.lineWidth
+  ctx.fillStyle = this.color
+
+  ctx.fillRect(this.possitionX, this.possitionY, this.width, this.height)
+  ctx.strokeRect(this.possitionX, this.possitionY, this.width, this.height)
+
+  ctx.globalAlpha = 1.0
+  this.calculate()
+  for(var i=0; i<this.text_turned.length; i++){
+    this.text_turned[i].draw(ctx)
+  }
+  ctx.globalAlpha = tmp_globalAlpha
+  ctx.lineWidth = tmp_lineWidth
+  ctx.fillStyle = tmp_fillStyle
+}
+
+TextboxSquare.prototype.calculate = function(){
+  this.text.canvas.possitionX = this.possitionX + this.text.margin_left
+  this.text.canvas.possitionY = this.possitionY + this.text.init_margin_top
+  this.text.canvas.z_index = this.z_index
+  this.calculate_turned_text()
+  for(var i=0; i<this.text_turned.length; i++){
+    this.text_turned[i].possitionY += this.text_turned[i].get_px_height() * i
+  }
+}
+
+TextboxSquare.prototype.calculate_turned_text = function(){
+  this.lines = 0
+  this.text_turned = [this.create_copy_of(this.text.canvas, "")]
+
+  var temp_font = this.ctx.font
+  this.ctx.font = this.text.canvas.font
+
+  for(var i=0; i<this.text.canvas.content.length; i++){
+    var chara = this.text.canvas.content.charAt(i)
+    if(chara == '\n'){
+      this.lines++
+      this.text_turned[this.lines] = this.create_copy_of(this.text.canvas, "")
+    }
+    if(this.ctx.measureText(this.text_turned[this.lines].content + chara).width > this.width - this.text.margin_left*2){
+      this.lines++
+      this.text_turned[this.lines] = this.create_copy_of(this.text.canvas, "")
+    }
+    this.text_turned[this.lines].content += chara
+  }
+  this.ctx.font = temp_font
+}
+
+TextboxSquare.prototype.create_copy_of = function(textCanvas, text){
+  var copied = new TextCanvasModel(text)
+  copied.color = textCanvas.color
+  copied.font = textCanvas.font
+  copied.globalAlpha = textCanvas.globalAlpha
+  copied.lineWidth = textCanvas.lineWidth
+  copied.possitionX = textCanvas.possitionX
+  copied.possitionY = textCanvas.possitionY
+  copied.z_index = textCanvas.z_index
+  copied.is_bold = textCanvas.is_bold
+  return copied
+}
