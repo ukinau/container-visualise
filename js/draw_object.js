@@ -85,6 +85,8 @@ DrawObject.prototype.calculate = function(){
     // SquareWithTitle is required to be called calculate Method
     // after attribute is updated like possitionX, Y and so on.
     this.canvas.calculate()
+    //If this drawObject has child, the title of this should be shown on the top
+    this.canvas.title_vertical_align = "top"
   }else{
     this.canvas.z_index = this.get_generation()
     // SquareWithTitle is required to be called calculate Method

@@ -5,16 +5,31 @@ var SquareWithTitle = function(text){
   this.radius = 15
   this.lineWidth = 3
   this.title = new TextCanvasModel(text)
+  this.title_vertical_align = "center" //"center" or "bottom"
 }
 SquareWithTitle.prototype.calculate = function(){
   // center align
   var blank = this.width - this.title.get_px_width()
-  var m_l = 0
-  if(blank > 0){
-    m_l = blank/2
+  var m_left = 0
+  if(blank > 0){ m_left = blank/2 }
+  this.title.possitionX = this.possitionX + m_left
+
+  var m_top = null
+  if(this.title_vertical_align == 'top'){
+      //Texbox possitionY is based on the bottom of chaacter
+      //    ----- <- not possitionY
+      //      |
+      //      | <- possitonY 
+      m_top = this.title.get_px_height()
+  }else if(this.title_vertical_align == 'center'){
+      m_top = (this.height - this.title.get_px_height())/2
+      if(m_top < 0){ m_top = 0 }
+      m_top += this.title.get_px_height()
+  }else{
+                              //Adjustment
+      m_top = this.height - this.title.get_px_height()/4
   }
-  this.title.possitionX = this.possitionX + m_l
-  this.title.possitionY = this.possitionY + 20
+  this.title.possitionY = this.possitionY + m_top
   this.title.z_index = this.z_index
 }
 SquareWithTitle.prototype.draw = function(ctx){
