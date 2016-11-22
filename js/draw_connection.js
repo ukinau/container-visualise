@@ -4,7 +4,7 @@
 var DrawConnectionObject = function(from, to){
   this.from = from
   this.to = to
-  this.canvas = new ConnectionBaseCanvas()
+  this.canvas = new ArrowConnection()
   this.unHighlight()
 }
 
