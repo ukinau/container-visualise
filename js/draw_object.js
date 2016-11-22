@@ -33,7 +33,7 @@ var DrawObject = function(name, obj){
     "mousemove": null,
     "mousemove:clear": null
   }
-  this.canvas = new SquareCanvasModel(name)
+  this.canvas = new SquareWithTitle(name)
   if(obj){
     var d_option_list = [["x", "possitionX"],
                        ["y", "possitionY"],
@@ -82,12 +82,12 @@ DrawObject.prototype.calculate = function(){
     this.canvas.width = this.get_mostright() - this.get_mostleft() + this.super_draw_margin*2
     this.canvas.height = this.get_mostdown() - this.get_mosttop() + this.super_draw_margin*2
     this.canvas.z_index = this.get_generation()
-    // SquareCanvasModel is required to be called calculate Method
+    // SquareWithTitle is required to be called calculate Method
     // after attribute is updated like possitionX, Y and so on.
     this.canvas.calculate()
   }else{
     this.canvas.z_index = this.get_generation()
-    // SquareCanvasModel is required to be called calculate Method
+    // SquareWithTitle is required to be called calculate Method
     // after attribute is updated like possitionX, Y and so on.
     this.canvas.calculate()
   }

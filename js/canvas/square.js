@@ -1,4 +1,4 @@
-var SquareCanvasModel = function(text){ 
+var SquareWithTitle = function(text){ 
   BaseCanvasModel.call(this)
   this.color = 'rgb(155, 187, 89)'
   this.globalAlpha = 1.0
@@ -6,7 +6,7 @@ var SquareCanvasModel = function(text){
   this.lineWidth = 3
   this.text = new TextCanvasModel(text)
 }
-SquareCanvasModel.prototype.calculate = function(){
+SquareWithTitle.prototype.calculate = function(){
   // center align
   var blank = this.width - this.text.get_px_width()
   var m_l = 0
@@ -17,7 +17,7 @@ SquareCanvasModel.prototype.calculate = function(){
   this.text.possitionY = this.possitionY + 20
   this.text.z_index = this.z_index
 }
-SquareCanvasModel.prototype.draw = function(ctx){
+SquareWithTitle.prototype.draw = function(ctx){
   // draw square
   var tmp_globalAlpha = ctx.globalAlpha
   var tmp_lineWidth = ctx.lineWidth
@@ -57,7 +57,7 @@ SquareCanvasModel.prototype.draw = function(ctx){
   ctx.fillStyle = tmp_fillStyle
 }
 
-SquareCanvasModel.prototype.get_aspects = function(){
+SquareWithTitle.prototype.get_aspects = function(){
   results = {
     "right":{
       "begin":{"x":this.get_possitionX_end(), "y":this.possitionY},
@@ -80,7 +80,7 @@ SquareCanvasModel.prototype.get_aspects = function(){
   }
   return results
 }
-inherits(SquareCanvasModel, BaseCanvasModel)
+inherits(SquareWithTitle, BaseCanvasModel)
 
 
 
@@ -89,7 +89,7 @@ inherits(SquareCanvasModel, BaseCanvasModel)
 //because need to calculate the point to start new line
 //Textbox Square
 var TextboxSquare = function(ctx, text){
-  SquareCanvasModel.call(this, text)
+  SquareWithTitle.call(this, text)
   this.lines = 0
   this.text_turned = [] //TextCanvas
   this.ctx = ctx
