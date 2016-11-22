@@ -4,18 +4,18 @@ var SquareWithTitle = function(text){
   this.globalAlpha = 1.0
   this.radius = 15
   this.lineWidth = 3
-  this.text = new TextCanvasModel(text)
+  this.title = new TextCanvasModel(text)
 }
 SquareWithTitle.prototype.calculate = function(){
   // center align
-  var blank = this.width - this.text.get_px_width()
+  var blank = this.width - this.title.get_px_width()
   var m_l = 0
   if(blank > 0){
     m_l = blank/2
   }
-  this.text.possitionX = this.possitionX + m_l
-  this.text.possitionY = this.possitionY + 20
-  this.text.z_index = this.z_index
+  this.title.possitionX = this.possitionX + m_l
+  this.title.possitionY = this.possitionY + 20
+  this.title.z_index = this.z_index
 }
 SquareWithTitle.prototype.draw = function(ctx){
   // draw square
@@ -51,7 +51,7 @@ SquareWithTitle.prototype.draw = function(ctx){
 
   ctx.globalAlpha = 1.0
   this.calculate()
-  this.text.draw(ctx)
+  this.title.draw(ctx)
   ctx.globalAlpha = tmp_globalAlpha 
   ctx.lineWidth = tmp_lineWidth
   ctx.fillStyle = tmp_fillStyle
@@ -93,6 +93,7 @@ var TextboxSquare = function(ctx, text){
   this.lines = 0
   this.text_turned = [] //TextCanvas
   this.ctx = ctx
+  this.text = this.title
   this.text_margin_left = 5
   this.text_margin_top = 3
   this.text_init_margin_top = 20
