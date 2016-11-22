@@ -51,7 +51,7 @@ var DrawObject = function(name, obj){
                             ["text-globalAlpha", "globalAlpha"]]
     for(var i=0; i<text_option_list.length; i++){
       if(obj[text_option_list[i][0]]){
-        this.canvas.text.canvas[text_option_list[i][1]] = obj[text_option_list[i][0]]
+        this.canvas.text[text_option_list[i][1]] = obj[text_option_list[i][0]]
       }
     }
   }

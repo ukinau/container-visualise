@@ -4,19 +4,18 @@ var SquareCanvasModel = function(text){
   this.globalAlpha = 1.0
   this.radius = 15
   this.lineWidth = 3
-  this.text = {}
-  this.text.canvas = new TextCanvasModel(text)
+  this.text = new TextCanvasModel(text)
 }
 SquareCanvasModel.prototype.calculate = function(){
   // center align
-  var blank = this.width - this.text.canvas.get_px_width()
+  var blank = this.width - this.text.get_px_width()
   var m_l = 0
   if(blank > 0){
     m_l = blank/2
   }
-  this.text.canvas.possitionX = this.possitionX + m_l
-  this.text.canvas.possitionY = this.possitionY + 20
-  this.text.canvas.z_index = this.z_index
+  this.text.possitionX = this.possitionX + m_l
+  this.text.possitionY = this.possitionY + 20
+  this.text.z_index = this.z_index
 }
 SquareCanvasModel.prototype.draw = function(ctx){
   // draw square
@@ -52,7 +51,7 @@ SquareCanvasModel.prototype.draw = function(ctx){
 
   ctx.globalAlpha = 1.0
   this.calculate()
-  this.text.canvas.draw(ctx)
+  this.text.draw(ctx)
   ctx.globalAlpha = tmp_globalAlpha 
   ctx.lineWidth = tmp_lineWidth
   ctx.fillStyle = tmp_fillStyle
@@ -94,9 +93,9 @@ var TextboxSquare = function(ctx, text){
   this.lines = 0
   this.text_turned = [] //TextCanvas
   this.ctx = ctx
-  this.text.margin_left = 5
-  this.text.margin_top = 3
-  this.text.init_margin_top = 20
+  this.text_margin_left = 5
+  this.text_margin_top = 3
+  this.text_init_margin_top = 20
 }
 
 TextboxSquare.prototype.draw = function(ctx){
@@ -121,9 +120,9 @@ TextboxSquare.prototype.draw = function(ctx){
 }
 
 TextboxSquare.prototype.calculate = function(){
-  this.text.canvas.possitionX = this.possitionX + this.text.margin_left
-  this.text.canvas.possitionY = this.possitionY + this.text.init_margin_top
-  this.text.canvas.z_index = this.z_index
+  this.text.possitionX = this.possitionX + this.text_margin_left
+  this.text.possitionY = this.possitionY + this.text_init_margin_top
+  this.text.z_index = this.z_index
   this.calculate_turned_text()
   for(var i=0; i<this.text_turned.length; i++){
     this.text_turned[i].possitionY += this.text_turned[i].get_px_height() * i
@@ -132,20 +131,20 @@ TextboxSquare.prototype.calculate = function(){
 
 TextboxSquare.prototype.calculate_turned_text = function(){
   this.lines = 0
-  this.text_turned = [this.create_copy_of(this.text.canvas, "")]
+  this.text_turned = [this.create_copy_of(this.text, "")]
 
   var temp_font = this.ctx.font
-  this.ctx.font = this.text.canvas.font
+  this.ctx.font = this.text.font
 
-  for(var i=0; i<this.text.canvas.content.length; i++){
-    var chara = this.text.canvas.content.charAt(i)
+  for(var i=0; i<this.text.content.length; i++){
+    var chara = this.text.content.charAt(i)
     if(chara == '\n'){
       this.lines++
-      this.text_turned[this.lines] = this.create_copy_of(this.text.canvas, "")
+      this.text_turned[this.lines] = this.create_copy_of(this.text, "")
     }
-    if(this.ctx.measureText(this.text_turned[this.lines].content + chara).width > this.width - this.text.margin_left*2){
+    if(this.ctx.measureText(this.text_turned[this.lines].content + chara).width > this.width - this.text_margin_left*2){
       this.lines++
-      this.text_turned[this.lines] = this.create_copy_of(this.text.canvas, "")
+      this.text_turned[this.lines] = this.create_copy_of(this.text, "")
     }
     this.text_turned[this.lines].content += chara
   }
