@@ -340,9 +340,9 @@ DrawObject.prototype.add_connection_to = function(drawObject){
   return drawConObj
 }
 
-DrawObject.prototype.event_handler = function(eventName){
+DrawObject.prototype.event_handler = function(eventName, event_info){
   if(this.event_functions[eventName]){
-    this.event_functions[eventName](this, eventName)
+    this.event_functions[eventName](this, eventName, event_info)
   }else{
     //console.log(this.name)
     //console.log(this.event_functions)

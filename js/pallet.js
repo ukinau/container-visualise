@@ -5,7 +5,8 @@ var Pallet = function(ctx, canvas_dom){
   this.draw_objects_z_map = {}
   this.event_object = {
     "mousedown": null, //selected object with highest z_index
-    "mousemove": null //selected object with highest z_index
+    "mousemove": null, //selected object with highest z_index
+    "dragging": null // keep the mousedown object until mouseup object is called
   }
 }
 Pallet.prototype.add_object = function(obj){
@@ -67,6 +68,17 @@ Pallet.prototype.setMouseEventToDocument = function(_document){
     var callback = this.genMouseEventHandler(events[i])
     _document.addEventListener(events[i], callback)
   }
+  _document.addEventListener('mouseup', this.getMouseUpEventHandler())
+}
+
+//original event dragging
+Pallet.prototype.getMouseUpEventHandler = function(){
+  var _this = this
+  var callback = function(e){
+    _this.event_object['dragging'].event_handler('dragging:clear')
+    _this.event_object['dragging'] = null
+  }
+  return callback
 }
 
 Pallet.prototype.genMouseEventHandler = function(eventName){
@@ -75,34 +87,45 @@ Pallet.prototype.genMouseEventHandler = function(eventName){
     var rect = e.target.getBoundingClientRect(); 
     var x = e.clientX - rect.left;
     var y = e.clientY - rect.top;
+    var event_info = {'x': x, 'y': y}
     var deteced = {}
-    for(var i=0; i< _this.draw_objects.length; i++){
-      var obj = _this.draw_objects[i]
-      if(obj.canvas.collision_detect(x, y)){
-        if(deteced[obj.canvas.z_index]){
-          deteced[obj.canvas.z_index].push(obj)
-        }else{
-          deteced[obj.canvas.z_index] = [obj]
-        }  
+    if(eventName=='mousemove' && _this.event_object['dragging']){
+      _this.event_object['dragging'].event_handler('dragging', event_info)
+    }else{
+      for(var i=0; i< _this.draw_objects.length; i++){
+        var obj = _this.draw_objects[i]
+        if(obj.canvas.collision_detect(x, y)){
+          if(deteced[obj.canvas.z_index]){
+            deteced[obj.canvas.z_index].push(obj)
+          }else{
+            deteced[obj.canvas.z_index] = [obj]
+          }
+        }
       }
-    }  
-    var z_list = Object.keys(deteced)
-    if(z_list.length > 0){
-      z_list.sort(function(a,b){
-        if(Number(a) < Number(b)) return 1;
-        if(Number(a) > Number(b)) return -1;
-        return 0;
-      })
-      var front_z_index = z_list.shift()
-      var detected_objects = deteced[front_z_index]
-      //TODO unsupport wrapped object  
-      //TODO consider event delivery
-      var detected_object = detected_objects[0]
-      if(_this.event_object[eventName] != detected_object){
-        if(_this.event_object[eventName])
+      var z_list = Object.keys(deteced)
+      if(z_list.length > 0){
+        z_list.sort(function(a,b){ if(Number(a) < Number(b)) return 1; if(Number(a) > Number(b)) return -1; return 0; })
+        var front_z_index = z_list.shift()
+        var detected_objects = deteced[front_z_index]
+        //TODO unsupport wrapped object
+        //TODO consider event delivery
+        var detected_object = detected_objects[0]
+        if(_this.event_object[eventName] != detected_object){
+          if(_this.event_object[eventName])
+            _this.event_object[eventName].event_handler(eventName+':clear')
+          _this.event_object[eventName] = detected_object
+          detected_object.event_handler(eventName, event_info)
+        }else{
+          detected_object.event_handler(eventName, event_info)
+        }
+        if(eventName == 'mousedown'){
+          _this.event_object['dragging'] = detected_object
+        }
+      }else{//If there is no selected obejct
+        if(_this.event_object[eventName]){
           _this.event_object[eventName].event_handler(eventName+':clear')
-        _this.event_object[eventName] = detected_object
-        detected_object.event_handler(eventName)
+          _this.event_object[eventName] = null
+        }
       }
     }
   }
