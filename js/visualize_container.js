@@ -14,18 +14,32 @@ function DrawObjectWithEvent(name, options){
     dObj.event_function_register("mousedown:clear", clickClearHandler)
     dObj.event_function_register("dragging", draggingHandler)
     dObj.event_function_register("dragging:clear", draggingClearHandler)
+    dObj.event_function_register("mousemove", mouseMoveHandler)
+    dObj.event_function_register("mousemove:clear", mouseMoveClearHandler)
+    dObj.canvas.title.is_bold = false
   }
   pallet.add_object(dObj)
   return dObj
 }
 
-function clickHandler(_this, eventName, eventInfo){
+function mouseMoveHandler(_this, eventName, eventInfo){
+  _this.canvas.lineFlag = true
+  _this.canvas.lineColor = '#ffffff'
+  _this.canvas.lineWidth = 5
   connectionHighLight(_this, eventName, eventInfo)
+  pallet.render()
+}
+function mouseMoveClearHandler(_this, eventName, eventInfo){
+  _this.canvas.lineFlag = false
+  connectionUnHighLight(_this, eventName, eventInfo)
+  pallet.render()
+}
+
+function clickHandler(_this, eventName, eventInfo){
   moveStart(_this, eventName, eventInfo)
   showTextBox(_this)
 }
 function clickClearHandler(_this, eventName, eventInfo){
-  connectionUnHighLight(_this, eventName, eventInfo)
   hideTextBox(_this)
 }
 function draggingHandler(_this, eventName, eventInfo){

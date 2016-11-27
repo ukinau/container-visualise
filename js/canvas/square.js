@@ -4,6 +4,8 @@ var SquareWithTitle = function(text){
   this.globalAlpha = 1.0
   this.radius = 15
   this.lineWidth = 3
+  this.lineColor = '#000000' //'rgb(0, 0, 0)'
+  this.lineFlag = false // line is needed or not
   this.title = new TextCanvasModel(text)
   this.title_vertical_align = "center" //"center" or "bottom"
 }
@@ -37,9 +39,11 @@ SquareWithTitle.prototype.draw = function(ctx){
   var tmp_globalAlpha = ctx.globalAlpha
   var tmp_lineWidth = ctx.lineWidth
   var tmp_fillStyle = ctx.fillStyle
+  var tmp_strokeStyle = ctx.strokeStyle
 
   ctx.globalAlpha = this.globalAlpha
   ctx.lineWidth = this.lineWidth
+  ctx.strokeStyle = this.lineColor
   ctx.fillStyle = this.color
   //ctx.fillRect(this.possitionX, this.possitionY, this.width, this.height)
   // Rounded square
@@ -62,14 +66,16 @@ SquareWithTitle.prototype.draw = function(ctx){
   ctx.quadraticCurveTo(this.possitionX, this.possitionY,
                        this.possitionX+this.radius, this.possitionY);
   ctx.fill();
-  ctx.stroke();
-
+  if(this.lineFlag){
+    ctx.stroke();
+  }
   ctx.globalAlpha = 1.0
   this.calculate()
   this.title.draw(ctx)
   ctx.globalAlpha = tmp_globalAlpha 
   ctx.lineWidth = tmp_lineWidth
   ctx.fillStyle = tmp_fillStyle
+  ctx.strokeStyle = tmp_strokeStyle
 }
 
 SquareWithTitle.prototype.get_aspects = function(){

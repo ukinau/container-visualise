@@ -84,6 +84,7 @@ DrawObject.prototype.calculate = function(){
     this.canvas.height = this.get_mostdown() - this.get_mosttop() + this.super_draw_margin*2
     //If this drawObject has child, the title of this should be shown on the top
     this.canvas.title_vertical_align = "top"
+    this.canvas.lineFlag = true
   }
   if(!this.canvas.z_index_fixed){
     this.canvas.z_index = this.get_generation()
