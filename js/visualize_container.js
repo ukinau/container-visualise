@@ -1,12 +1,13 @@
 function DrawObjectWithEvent(name, options){
   if(options['type'] == 'team'){
     options['color'] = '#C9C9AB'
-    options['text-font'] = '24px sans-serif'
+    options['text-font'] = '20px sans-serif'
   }else if(options['type'] == 'component'){
     options['color'] = '#88856A'
-    options['text-font'] = '24px sans-serif'
+    options['text-font'] = '20px sans-serif'
   }else{
     options['color'] = '#DBBE32'
+    options['text-font'] = '16px sans-serif'
   }
   var dObj = new DrawObject(name, options)
   if(dObj.options['type'] == 'container'){

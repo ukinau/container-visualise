@@ -6,6 +6,7 @@ var DrawConnectionObject = function(from, to){
   this.to = to
   this.canvas = new ArrowConnection()
   this.unHighlight()
+  this.options = {}
 }
 
 DrawConnectionObject.prototype.calculate = function(){

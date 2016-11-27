@@ -21,6 +21,14 @@ Pallet.prototype.remove_object = function(obj){
   }
 }
 
+Pallet.prototype.find_object = function(key, value){
+  for(var i=0; i<this.draw_objects.length; i++){
+    if(this.draw_objects[i].options[key] == value){
+      return this.draw_objects[i]
+    }
+  }
+}
+
 /**
   Private: re-calculate the possition and z-index for drawObject,
   and generate layer map as followings. after this method is executed,

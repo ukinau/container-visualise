@@ -12,18 +12,20 @@
     <script src="File:///Users/ukinau/work/container-visualise/js/draw_connection.js"></script>
     <script src="File:///Users/ukinau/work/container-visualise/js/pallet.js"></script>
     <script src="File:///Users/ukinau/work/container-visualise/js/visualize_container.js"></script>
+    <script src="File:///Users/ukinau/work/container-visualise/data/data_service_data.js"></script>
+    <script src="File:///Users/ukinau/work/container-visualise/data/data_dependencies.js"></script>
 
     <style>
       canvas{
-         width:  2000px;
-         height: 1000px;
+         width:  3000px;
+         height: 2000px;
          border: 1px solid #000000;
       }
     </style>
   </head>
 
   <body onload="init()" style="margin:0px">
-    <canvas id="canvas" width="4000" height="2000"></canvas>
+    <canvas id="canvas" width="6000" height="4000"></canvas>
 
     <script>
       function init(){
@@ -31,29 +33,67 @@
       
         ctx = canvas.getContext("2d");
         ctx.scale(2, 2)
-
+        var type = null
         pallet = new Pallet(ctx, canvas)
-        super2 = DrawObjectWithEvent('super2', {'type': 'team'})
-        super1 = DrawObjectWithEvent('super1', {'type': 'component'})
-        child1 = DrawObjectWithEvent('child1', {"x": 80, "y": 240, "width": 100, "height": 70, 'type': 'container'})
-        child2 = DrawObjectWithEvent('child2', {"x": 190, "y": 240, "width": 100, "height": 70, 'type': 'container'})
+        for(var i=0; i<service_data.length; i++){
+          console.log('deal:'+i)
+          if(service_data[i]['category'] == 'Super'){
+            if(service_data[i]['supers'] && service_data[i]['supers'].length > 0){
+              type = 'component'
+            }else{
+              type = 'team'
+            }
+            DrawObjectWithEvent(
+                service_data[i]['text'],
+                {'type': type, 'key': service_data[i]['key']})
+          }else{
+            type = 'container'
+            var loc_array = service_data[i]['loc'].split(' ')
+            var x = Number(loc_array[0])
+            var y = Number(loc_array[1])
+            DrawObjectWithEvent(
+                service_data[i]['text'],
+                {'type': type, 'key': service_data[i]['key'],
+                 'x': x, 'y': y, "height": 40,
+                 'width': Number(service_data[i]['width'])+10,
+                 'description': service_data[i]['description']})
+          }
+        }
+        for(var i=0; i<service_data.length; i++){
+          console.log('deal_child:'+i)
+          if(service_data[i]['supers'] && service_data[i]['supers'].length > 0){
+            var _child = pallet.find_object("key", service_data[i]['key'])
+            for(var j=0; j<service_data[i]['supers'].length; j++){
+              var _super_key = service_data[i]['supers'][j]
+              var _super = pallet.find_object("key", _super_key)
+              _child.configure_super(_super)
+            }
+          }
+        }
 
-        child1.configure_super(super1)
-        child2.configure_super(super1)
-        super1.configure_super(super2)
+        for(var i=0; i<dependencies.length;i++){
+          var from = dependencies[i]['from']
+          var to = dependencies[i]['to']
+          var fromObj = pallet.find_object("key", from)
+          if(!fromObj){
+            console.log('key not found:'+ from)
+            continue
+          }
+          var toObj = pallet.find_object("key", to)
+          if(!toObj){
+            console.log('key not found:'+ to)
+            continue
+          }
 
-        super2 = DrawObjectWithEvent('super4', {'type': 'team'})
-        super1 = DrawObjectWithEvent('super3', {'type': 'component'})
-        child1d = DrawObjectWithEvent('child1d', {"x": 550, "y": 240, "width": 100, "height": 70, 'type': 'container'})
-        child2 = DrawObjectWithEvent('child2d', {"x": 720, "y": 240, "width": 100, "height": 70, 'type':'container'})
-        child1d.configure_super(super1)
-        child2.configure_super(super1)
-        super1.configure_super(super2)
+          var con = fromObj.add_connection_to(toObj)
+          pallet.add_object(con)
+        }
 
-        con1 = child1.add_connection_to(child1d)
-        con2 = child1.add_connection_to(child2)
-        pallet.add_object(con1)
-        pallet.add_object(con2)
+
+        //con1 = child1.add_connection_to(child1d)
+        //con2 = child1.add_connection_to(child2)
+        //pallet.add_object(con1)
+        //pallet.add_object(con2)
         pallet.render()
         pallet.setMouseEventToDocument(document)
       }
