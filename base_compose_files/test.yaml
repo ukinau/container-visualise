@@ -1,0 +1,110 @@
+version: '2'
+
+services:
+  PaymentMangeer:
+    image: payment-manager
+    ports:
+      - "3000:3000"
+    network_mode: "bridge"
+    labels:
+      com.microservice.team: "devteamA"
+      com.microservice.component: "Payment"
+      com.microservice.depends: PaymentHistoryDump PaymentOrchestrator
+      com.microservice.description: |
+        Sample.  This is for payment related container
+
+  PaymentHistoryDump:
+    image: payment-history
+    network_mode: "bridge"
+    labels:
+      com.microservice.team: "devteamA"
+      com.microservice.component: "Payment"
+      com.microservice.depends: Mysql
+      com.microservice.description: |
+        Sample.  This is for payment related container
+
+  PaymentOrchestrator:
+    image: payment-orchestrator
+    network_mode: "bridge"
+    labels:
+      com.microservice.team: "devteamA"
+      com.microservice.component: "Payment"
+      com.microservice.depends: RabbitMq PaymentAgent
+      com.microservice.description: |
+        Sample.  This is for payment related container
+
+  PaymentAgent:
+    image: payment-agent
+    network_mode: "bridge"
+    labels:
+      com.microservice.team: "devteamA"
+      com.microservice.component: "Payment"
+      com.microservice.depends: RabbitMq
+      com.microservice.description: |
+        Sample.  This is for payment related container
+
+  OrderManager:
+    image: order
+    ports:
+      - "3000:3000"
+    labels:
+      com.microservice.team: "devteamB"
+      com.microservice.component: "Order"
+      com.microservice.depends: PaymentMangeer Mysql
+      com.microservice.description: |
+        Sample.  This is for order related container
+
+  OrderChecker:
+    image: order-check
+    labels:
+      com.microservice.team: "devteamB"
+      com.microservice.component: "Order"
+      com.microservice.depends: RabbitMq OrderManager
+      com.microservice.description: |
+        Sample.  This is for order related container
+    
+  OrderWiper:
+    image: order-wiper 
+    labels:
+      com.microservice.team: "devteamB"
+      com.microservice.component: "Order"
+      com.microservice.depends: Mysql Redis
+      com.microservice.description: |
+        Sample.  This is for order related container
+
+  ItemManager:
+    image: item
+    labels:
+      com.microservice.team: "devteamC"
+      com.microservice.component: "Item"
+      com.microservice.depends: Mysql
+      com.microservice.description: |
+        Sample.  This is for item related container
+
+  ShopInformations:
+    image: shop
+    labels:
+      com.microservice.team: "devteamC"
+      com.microservice.component: "Item"
+      com.microservice.depends: ItemManager
+      com.microservice.description: |
+        Sample.  This is for item related container
+
+    
+  Authenticator:
+    image: auth
+    labels:
+      com.microservice.team: "devteamC"
+      com.microservice.component: "Auth"
+      com.microservice.depends: Mysql Vault
+      com.microservice.description: |
+        Sample.  This is for item related container
+
+  PolicyController:
+    image: auth
+    labels:
+      com.microservice.team: "devteamC"
+      com.microservice.component: "Auth"
+      com.microservice.depends: Mysql Authenticator
+      com.microservice.description: |
+        Sample.  This is for item related container

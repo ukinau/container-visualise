@@ -1,0 +1,80 @@
+version: '2'
+
+services:
+  Mysql:
+    image: mysql
+    volumes_from:
+      - MysqlData
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is common service which is reffered by many component to be compared with 
+        other service
+
+
+  MysqlData:
+    image: mysql-data
+    volumes: ["myslq:/var/mysql/data"]
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is the volume container to store the persistent data for mysql
+
+
+  Fluentd:
+    image: fluentd
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is the fluentd to be used for colleting log and
+        forward to ElasticSearch and influxdb
+
+  RabbitMq:
+    image: rabbit
+    network_mode: host
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is rabbitmq
+
+  SensuServer:
+    image: sensu
+    restart: always
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.depends: RabbitMq Redis
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This have responsible for the monitoring for infrastracture
+
+  Redis:
+    image: redis
+    volumes_from:
+      - RedisData
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is key-value-store
+
+
+  RedisData:
+    image: redis-data
+    volumes: ["redis:/var/redis"]
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is used to store the data of redis
+
+  Vault:
+    image: vault
+    labels:
+      com.microservice.team: "SysAdmin"
+      com.microservice.component: "Common"
+      com.microservice.description: |
+        This is used to store the crendential data
