@@ -29,7 +29,7 @@ TextCanvasModel.prototype.draw = function(ctx){
   ctx.lineWidth = tmp_lineWidth
 }
 TextCanvasModel.prototype.get_px_width = function(){
-  return (Number(this.font.match(/([0-9].)px/)[1])/2) * this.content.length
+  return (Number(this.font.match(/([0-9].)px/)[1])/1.7) * this.content.length
 }
 //TODO
 TextCanvasModel.prototype.get_px_height = function(){
