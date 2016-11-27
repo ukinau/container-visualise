@@ -25,7 +25,7 @@ var DrawObject = function(name, obj){
     "left":{},
     "right":{} 
   }
-  this.connecting_points_space = 5 // point <10> point <10>
+  this.connecting_points_space = 10 // point <10> point <10>
   this.connections = []
 
   this.event_functions = {
@@ -274,7 +274,7 @@ DrawObject.prototype.get_connecting_point = function(hintDrawObj){
       candidate_point = point
       candidate_array = current_connecting[point]
     }
-    if (candidate_array.length > current_connecting[point]){
+    if (candidate_array.length > current_connecting[point].length){
       candidate_point = point
       candidate_array = current_connecting[point]
     }

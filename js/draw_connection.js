@@ -17,7 +17,7 @@ DrawConnectionObject.prototype.calculate = function(){
 
 DrawConnectionObject.prototype.highlight = function(options){
   this.canvas.strokeStyle = "black"
-  this.canvas.globalAlpha = 0.6
+  this.canvas.globalAlpha = 1
   this.canvas.lineWidth = 3
   if(options["color"]){
     this.canvas.strokeStyle = options["color"]
@@ -32,6 +32,6 @@ DrawConnectionObject.prototype.highlight = function(options){
 
 DrawConnectionObject.prototype.unHighlight = function(){
   this.canvas.strokeStyle = "black"
-  this.canvas.globalAlpha = 0.6
-  this.canvas.lineWidth = 3
+  this.canvas.globalAlpha = 0.1
+  this.canvas.lineWidth = 2
 }
