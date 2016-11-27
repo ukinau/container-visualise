@@ -179,3 +179,4 @@ TextboxSquare.prototype.create_copy_of = function(textCanvas, text){
   copied.is_bold = textCanvas.is_bold
   return copied
 }
+inherits(TextboxSquare, SquareWithTitle)

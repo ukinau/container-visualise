@@ -11,6 +11,7 @@
     <script src="File:///Users/ukinau/work/container-visualise/js/draw_object.js"></script>
     <script src="File:///Users/ukinau/work/container-visualise/js/draw_connection.js"></script>
     <script src="File:///Users/ukinau/work/container-visualise/js/pallet.js"></script>
+    <script src="File:///Users/ukinau/work/container-visualise/js/visualize_container.js"></script>
 
     <style>
       canvas{
@@ -32,92 +33,29 @@
         ctx.scale(2, 2)
 
         pallet = new Pallet(ctx, canvas)
-        super2 = new DrawObject('super2', {"color": '#C9C9AB', "text-font": "24px sans-serif"})
-        super1 = new DrawObject('super1', {"color": '#88856A', "text-font": "24px sans-serif"})
-        child1 = new DrawObject('child1', {"color": '#DBBE32', "x": 80, "y": 240, "width": 100, "height": 70, "globalAlpha": 1.0})
-        child2 = new DrawObject('child2', {"color": '#DBBE32', "x": 190, "y": 240, "width": 100, "height": 70})
+        super2 = DrawObjectWithEvent('super2', {'type': 'team'})
+        super1 = DrawObjectWithEvent('super1', {'type': 'component'})
+        child1 = DrawObjectWithEvent('child1', {"x": 80, "y": 240, "width": 100, "height": 70, 'type': 'container'})
+        child2 = DrawObjectWithEvent('child2', {"x": 190, "y": 240, "width": 100, "height": 70, 'type': 'container'})
 
         child1.configure_super(super1)
         child2.configure_super(super1)
-        pallet.add_object(child1)
-        pallet.add_object(child2)
-        pallet.add_object(super1)
-        pallet.add_object(super2)
         super1.configure_super(super2)
 
-        super2 = new DrawObject('super4', {"color": 'rgb(219, 190, 50)', "text-font": "24px sans-serif"})
-        super1 = new DrawObject('super3', {"text-font": "24px sans-serif"})
-        child1d = new DrawObject('child1d', {"x": 550, "y": 240, "width": 100, "height": 70})
-        child2 = new DrawObject('child2d', {"x": 720, "y": 240, "width": 100, "height": 70})
+        super2 = DrawObjectWithEvent('super4', {'type': 'team'})
+        super1 = DrawObjectWithEvent('super3', {'type': 'component'})
+        child1d = DrawObjectWithEvent('child1d', {"x": 550, "y": 240, "width": 100, "height": 70, 'type': 'container'})
+        child2 = DrawObjectWithEvent('child2d', {"x": 720, "y": 240, "width": 100, "height": 70, 'type':'container'})
         child1d.configure_super(super1)
         child2.configure_super(super1)
-        pallet.add_object(child1d)
-        pallet.add_object(child2)
-        pallet.add_object(super1)
-        pallet.add_object(super2)
         super1.configure_super(super2)
+
         con1 = child1.add_connection_to(child1d)
         con2 = child1.add_connection_to(child2)
         pallet.add_object(con1)
         pallet.add_object(con2)
         pallet.render()
         pallet.setMouseEventToDocument(document)
-
-
-        function connectionHighLight(_this, eventName, _){
-          var connections = _this.connections
-          for(var i=0; i<connections.length; i++){
-            if(_this == connections[i].from){
-              connections[i].highlight({"color": "blue", "lineWidth": 3})
-            }else{
-              connections[i].highlight({"color": "red", "lineWidth": 3})
-            }
-          }
-          pallet.render()
-          moveStart(_this, eventName, _)
-        }
-      
-        function connectionUnHighLight(_this, eventName, _){
-          var connections = _this.connections
-          for(var i=0; i<connections.length; i++){
-            connections[i].unHighlight()
-          }
-          pallet.render()
-        }
-        function moveStart(_this, eventName, eventInfo){
-          console.log('moveStart')
-          _this['clicked'] = true
-          _this['moveStartPoint'] = eventInfo
-          _this['originalCordinate'] = [_this.canvas.possitionX, _this.canvas.possitionY]
-        }
-        function move(_this, eventName, eventInfo){
-          _this.canvas.possitionX = _this['originalCordinate'][0] + Number(eventInfo['x']) - Number(_this['moveStartPoint']['x'])
-          _this.canvas.possitionY = _this['originalCordinate'][1] + Number(eventInfo['y']) - Number(_this['moveStartPoint']['y'])
-          pallet.render()
-        }
-
-        function clearMove(_this, eventName, eventInfo){
-          console.log('clearMove')
-          _this['clicked'] = false
-          _this['moveStartPoint'] = null
-          _this['originalCordinate'] = [_this.canvas.possitionX, _this.canvas.possitionY]
-        }
-        child1.event_function_register("mousedown", connectionHighLight)
-        child1.event_function_register("mousedown:clear", connectionUnHighLight)
-        child1.event_function_register("dragging", move)
-        child1.event_function_register("dragging:clear", clearMove)
-
-      var text_desc = 'This is sample:\nThe text field calls this method whenever the user taps the return button. You can use this method to implement any custom behavior when the button is tapped. For example, if you want to dismiss the keyboard when the user taps the return button, your implementation can call the resignFirstResponder( method. )'
-      var textbox =  new TextboxSquare(ctx, text_desc)
-      textbox.possitionX = 200
-      textbox.possitionY = 400
-      textbox.width = 300
-      textbox.height = 200
-      textbox.color = "rgb(250, 250, 250)"
-      textbox.globalAlpha = 0.8
-      textbox.text.font = "15px sans-serif"
-      textbox.text.is_bold = false
-      textbox.draw(ctx)
       }
 
     </script>

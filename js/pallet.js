@@ -13,6 +13,14 @@ Pallet.prototype.add_object = function(obj){
   this.draw_objects.push(obj)
 }
 
+Pallet.prototype.remove_object = function(obj){
+  for(var i=0; i<this.draw_objects.length; i++){
+    if(this.draw_objects[i] === obj){
+      this.draw_objects.splice(i,1)
+    }
+  }
+}
+
 /**
   Private: re-calculate the possition and z-index for drawObject,
   and generate layer map as followings. after this method is executed,
@@ -75,8 +83,10 @@ Pallet.prototype.setMouseEventToDocument = function(_document){
 Pallet.prototype.getMouseUpEventHandler = function(){
   var _this = this
   var callback = function(e){
-    _this.event_object['dragging'].event_handler('dragging:clear')
-    _this.event_object['dragging'] = null
+    if(_this.event_object['dragging']){
+      _this.event_object['dragging'].event_handler('dragging:clear')
+      _this.event_object['dragging'] = null
+    }
   }
   return callback
 }

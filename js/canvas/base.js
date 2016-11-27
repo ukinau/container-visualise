@@ -4,6 +4,7 @@ var BaseCanvasModel = function(){
   this.width = 0; 
   this.height = 0; 
   this.z_index = 0;
+  this.z_index_fixed = false;
 }
 BaseCanvasModel.prototype.get_possitionX_end = function(){
   return this.possitionX + this.width
