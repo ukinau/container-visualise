@@ -9,7 +9,9 @@ services:
     labels:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
-      com.microservice.depends: PaymentHistoryDump PaymentOrchestrator
+      com.microservice.depends: |
+        PaymentHistoryDump:REST(/) RabbitMq:SUB(notify)
+        Redis:READ(schedules:*)
       com.microservice.description: |
         Sample.  This is for payment related container
 

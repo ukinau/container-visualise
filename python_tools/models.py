@@ -1,13 +1,9 @@
+import re
 import yaml
 from common import get_something_from_label
 
 
-def parse_depenencies(dependencies_str):
-    dependencies = list()
-    for s_name in dependencies_str.split(' '): 
-        if s_name != ' ' and s_name != '':
-            dependencies.append(s_name) 
-    return dependencies
+
 
 def is_volume_container(component_info, shared=False):
     return 'volumes' in component_info and shared
@@ -23,7 +19,7 @@ def load_teams_and_services(file_name, shared=False):
         description = get_something_from_label(info, 'description')
         component_group = get_something_from_label(info, 'component')
         dependencies_list = get_something_from_label(info, 'depends')
-        dependencies = parse_depenencies(dependencies_list)
+        dependencies = Dependency.parse_depenencies(component_name, dependencies_list)
 
         team_obj = Team.create_team(team, shared_service_maintainer=shared)
 
@@ -115,7 +111,8 @@ class Team(object):
           for sc in team.services:
               for s in sc.children:
                   for dep in s.dependencies:
-                      result_array_link.append({'from': s.key, 'to': dep.key, 'from_name': s.name, 'to_name': dep.name}) 
+                      dep_s = dep.to_instance
+                      result_array_link.append({'from': s.key, 'to': dep_s.key, 'from_name': s.name, 'to_name': dep_s.name, 'op': dep.operation, 'topics': dep.topics}) 
       return result_array_link
                      
 
@@ -148,12 +145,14 @@ class Service(object):
       self.reffered_from.append(service)
 
   def resolve_dependencies(self, dependencies):
-      for dependency_name in dependencies:
-          service = Service.find_service_by_name(dependency_name)
+      for dependency in dependencies:
+          service = Service.find_service_by_name(dependency._to)
           if not service:
-              service = Service.create_service(dependency_name, "", ())
-          service.add_reffered_from(self)
-          self.dependencies.append(service)
+              service = Service.create_service(dependency._to, "", ())
+          dependency.set_instance_of_to(service)
+          dependency.set_instance_of_from(self)
+          service.add_reffered_from(dependency)
+          self.dependencies.append(dependency)
 
   def most_longname_service(self):
       most_long = self
@@ -182,3 +181,52 @@ class Service(object):
       else:
           service = Service(name, description, dependencies, service_type)
       return service 
+
+class Dependency():
+
+    def __init__(self, _from, _to, opts = None):
+        self._to = _to
+        self._from = _from
+        self.operation = None
+        self.topics = []
+        if opts:
+            self.operation = opts['op']
+            self.topics = opts['topics']
+
+    def set_instance_of_to(self, service):
+        self.to_instance = service
+
+    def set_instance_of_from(self, service):
+        self.from_instance = service
+
+    # COMPONENT:OP(TOPIC1)(TOPIC2)
+    @classmethod
+    def parse_depenencies_op_topic(cls, dependencies_str):
+        splited = dependencies_str.split(':')
+        stripped_component = ":".join(splited[1:])
+        if len(stripped_component) == 1:
+            return (None, None)
+        op_array = re.findall(r'(^.*?)\(', stripped_component)
+        if len(op_array) == 0:
+            return (None, None)
+        op = op_array[0]
+        topics = re.findall(r'\((.*?)\)', stripped_component)
+        if op and len(topics) > 0:
+            return (op, topics)
+        else:
+            return (None, None)
+
+    @classmethod
+    def parse_depenencies(cls, src, dependencies_str):
+        dependencies = list()
+        dependencies_str = dependencies_str.replace('\n', ' ')
+        for dep_definition in dependencies_str.split(' '): 
+            if dep_definition != ' ' and dep_definition != '':
+                dep_name = dep_definition.split(':')[0]
+                op, topics = Dependency.parse_depenencies_op_topic(dep_definition)
+                if op and topics:
+                    dep = Dependency(src, dep_name, {'op': op, 'topics': topics})
+                else:
+                    dep = Dependency(src, dep_name)
+                dependencies.append(dep) 
+        return dependencies

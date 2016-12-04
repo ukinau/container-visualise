@@ -40,6 +40,7 @@ services:
       com.microservice.component: "Common"
       com.microservice.description: |
         This is rabbitmq
+      com.microservice.operations: SUB PUB
 
   SensuServer:
     image: sensu
@@ -60,7 +61,7 @@ services:
       com.microservice.component: "Common"
       com.microservice.description: |
         This is key-value-store
-
+      com.microservice.operations: RW READ WRITE
 
   RedisData:
     image: redis-data
