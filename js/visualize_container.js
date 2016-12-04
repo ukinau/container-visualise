@@ -9,7 +9,8 @@ function DrawObjectWithEvent(name, options){
     options['color'] = '#DBBE32'
     options['text-font'] = '16px sans-serif'
   }
-  var dObj = new DrawObject(name, options)
+  var dCanvas = new SquareWithTitle(name, options)
+  var dObj = new DrawObject(name, dCanvas, options)
   if(dObj.options['type'] == 'container'){
     dObj.event_function_register("mousedown", clickHandler)
     dObj.event_function_register("mousedown:clear", clickClearHandler)
@@ -60,7 +61,7 @@ function showTextBox(_this){
   if(!_this.options['description']){
     _this.options['description'] = "empty description"
   }
-  var content = _this.name + '\n' + _this.options['description']
+  var content = _this.id + '\n' + _this.options['description']
   var textbox =  new TextboxSquare(pallet.ctx, content)
   textbox.possitionX = _this.canvas.get_possitionX_end()
   textbox.possitionY = _this.canvas.get_possitionY_end()
