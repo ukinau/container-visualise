@@ -12,29 +12,13 @@ from python_tools.common import (
   print_help
 )
 from python_tools import drawable
+from python_tools.config import *
 
-FILE_NAME = 'base_compose_files/test.yaml'
-FILE_NAME_SV = 'base_compose_files/test-service.yaml'
-DEFAULT_BASE_OUTPUT_FILE = 'data/data'
 
 load_teams_and_services(FILE_NAME)
 load_teams_and_services(FILE_NAME_SV, shared=True)
 
-total_width = 1000
-team_margin_left = 90
-sc_box_margin_left = 75
-box_margin_left = 20
-
-box_height = 50
-sc_box_margin_top = 110
-one_charactor_width = 10 # if 'test' => 40
-
 result_array = list()
-
-# Sysdev
-shared_height_volumes = 100
-shared_height_containers = 220
-shared_left = 400
 
 # Calculate and update the occupation rate of
 # team and service object
@@ -73,7 +57,10 @@ for team in Team.get_teams():
     most_sc_height = 0
     sc_left = sc_current_horizontal_point + box_margin_left
 
-    result = create_drawable_object(team,category_super=True)
+    result = create_drawable_object(
+            team,
+            loc=str(sc_current_horizontal_point)+' '+str(sc_height),
+            category_super=True, width=team_box_width)
     result_array.append(result)
 
     sc_w_q = copy(team.services)
@@ -83,14 +70,14 @@ for team in Team.get_teams():
         sc_minimum_w =\
             len(sc.most_longname_service().name) * one_charactor_width
 
-        if sc_minimum_w > team_box_width * sc.wide_rate:
+        if sc_minimum_w > (team_box_width - sc_box_margin_left * 2) * sc.wide_rate:
             sc_width = sc_minimum_w
         else:
-            sc_width = team_box_width * sc.wide_rate
+            sc_width = (team_box_width - sc_box_margin_left * 2) * sc.wide_rate
 
-           
         if sc_width + box_margin_left > team_box_width:
             team_box_width =  sc_width + sc_box_margin_left
+            team.drawable['width'] = team_box_width
             current_horizontal_point_maximum = current_horizontal_point + team_box_width
             
         # if over assignment of team width
@@ -105,7 +92,11 @@ for team in Team.get_teams():
             sc_w_q.insert(0, sc) 
             continue
                 
-        result = create_drawable_object(sc, team, [team.key], category_super=True)
+        result = create_drawable_object(
+                sc, team, [team.key],
+                loc=str(sc_left)+' '+str(sc_height),
+                category_super=True,
+                width=sc_width)
         result_array.append(result)
 
         sc_inner_height = sc_height
@@ -114,7 +105,7 @@ for team in Team.get_teams():
         check_q = list()
         while len(s_w_q) > 0:
             service = s_w_q.pop()
-            s_long = len(service.most_longname_service().name) * one_charactor_width
+            s_long = len(service.name) * one_charactor_width
             if s_long + sc_inner_left > sc_left + sc_width:
                 if service in check_q:
                     check_q = list()

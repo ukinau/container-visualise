@@ -15,6 +15,7 @@ def create_drawable_object(service, team=None,supers=None, loc=None, category_su
      if category_super: result['category'] = 'Super'
      if team: result['team'] = team.name
      if width: result['width'] = width
+     service.drawable = result
      return result
 
 def print_help():

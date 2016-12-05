@@ -7,6 +7,7 @@ class Team(object):
       self.shared_service_maintainer = shared_service_maintainer 
       self.wide_rate = 0
       self.key = None
+      self.drawable = None
 
   def add_service(self, service):
       if not self.check_duplicate(service):
@@ -30,11 +31,8 @@ class Team(object):
   def update_service_rate(self):
       all_service = len(self)
       for service in self.services:
-          if service.children:
-              service.wide_rate = float(
-                  len(service.children))/all_service
-          else:
-              service.wide_rate = float(1)/all_service
+          service.wide_rate = float(
+              len(service.children))/all_service
               
   @classmethod
   def eliminate_team_from_list(cls, name):

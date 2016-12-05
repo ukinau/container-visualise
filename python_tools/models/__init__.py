@@ -1,6 +1,7 @@
 from .dependency import Dependency  
 from .service import Service
 from .team import Team
+from .service_group import ServiceGroup
 from ..common import get_something_from_label
 
 import yaml
@@ -25,9 +26,9 @@ def load_teams_and_services(file_name, shared=False):
         team_obj = Team.create_team(team, shared_service_maintainer=shared)
 
         if is_volume_container(info, shared):
-            component_group_obj = Service.create_service("Volumes", "", (), "component_group")
+            component_group_obj = ServiceGroup.create("Volumes")
         else:
-            component_group_obj = Service.create_service(component_group, "", (), "component_group")
+            component_group_obj = ServiceGroup.create(component_group)
 
         team_obj.add_service(component_group_obj)
         component = Service.create_service(component_name, description, dependencies)

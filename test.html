@@ -30,7 +30,7 @@
         var type = null
         pallet = new Pallet(ctx, canvas)
         for(var i=0; i<service_data.length; i++){
-          console.log('deal:'+i)
+          console.log(service_data[i]['text'], service_data[i]['loc'], service_data[i]['width'])
           if(service_data[i]['category'] == 'Super'){
             if(service_data[i]['supers'] && service_data[i]['supers'].length > 0){
               type = 'component'
@@ -54,7 +54,6 @@
           }
         }
         for(var i=0; i<service_data.length; i++){
-          console.log('deal_child:'+i)
           if(service_data[i]['supers'] && service_data[i]['supers'].length > 0){
             var _child = pallet.find_object("key", service_data[i]['key'])
             for(var j=0; j<service_data[i]['supers'].length; j++){
