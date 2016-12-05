@@ -33,7 +33,16 @@ class Team(object):
       for service in self.services:
           service.wide_rate = float(
               len(service.children))/all_service
-              
+
+  def get_x_cordinate_of_rightest_sg(self):
+      rightest_cordinate = 0
+      for sg in self.services:
+          loc = sg.drawable['loc'].split(' ')
+          x = float(loc[0]) + float(sg.drawable['width']) 
+          if x > rightest_cordinate:
+              rightest_cordinate = x
+      return rightest_cordinate
+
   @classmethod
   def eliminate_team_from_list(cls, name):
       for i, team in enumerate(cls.TEAM_LIST):

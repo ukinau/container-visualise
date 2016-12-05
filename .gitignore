@@ -1,3 +1,4 @@
+base_compose_files/production*
 *.pyc
 */*.pyc
 */*/*.pyc

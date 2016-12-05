@@ -122,8 +122,10 @@ for team in Team.get_teams():
                 if sc_inner_height > most_sc_height:
                     most_sc_height = sc_inner_height
                 sc_inner_left += one_charactor_width * len(service.name) + box_margin_left
-        sc_left += sc_width + sc_box_margin_left
-    current_horizontal_point = current_horizontal_point_maximum + team_margin_left
+        sc.drawable['width'] = sc.get_x_cordinate_of_rightest_service() - sc_left
+        sc_left = sc.get_x_cordinate_of_rightest_service() + sc_box_margin_left
+
+    current_horizontal_point = team.get_x_cordinate_of_rightest_sg() + team_margin_left
 
 if __name__ == '__main__':
 

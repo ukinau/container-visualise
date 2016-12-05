@@ -20,6 +20,15 @@ class ServiceGroup(object):
                   most_long = s
       return most_long
 
+  def get_x_cordinate_of_rightest_service(self):
+      rightest_cordinate = 0
+      for sv in self.children:
+          loc = sv.drawable['loc'].split(' ')
+          x = float(loc[0]) + float(sv.drawable['width']) 
+          if x > rightest_cordinate:
+              rightest_cordinate = x
+      return rightest_cordinate
+
   @classmethod
   def create(cls, name):
     sg = ServiceGroup.find(name)

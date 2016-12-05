@@ -2,9 +2,9 @@ FILE_NAME = 'base_compose_files/test.yaml'
 FILE_NAME_SV = 'base_compose_files/test-service.yaml'
 DEFAULT_BASE_OUTPUT_FILE = 'data/data'
 
-total_width = 1000
-team_margin_left = 90
-sc_box_margin_left = 75
+total_width = 3000
+team_margin_left = 120
+sc_box_margin_left = 90
 box_margin_left = 20
 
 box_height = 50
