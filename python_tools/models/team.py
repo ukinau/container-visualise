@@ -85,6 +85,6 @@ class Team(object):
               for s in sc.children:
                   for dep in s.dependencies:
                       dep_s = dep.to_instance
-                      result_array_link.append({'from': s.key, 'to': dep_s.key, 'from_name': s.name, 'to_name': dep_s.name, 'op': dep.operation, 'topics': dep.topics}) 
+                      result_array_link.append({'from': s.key, 'to': dep_s.key, 'from_name': s.name, 'to_name': dep_s.name, 'topics': dep.topics})
       return result_array_link
 

@@ -10,8 +10,8 @@ services:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
       com.microservice.depends: |
-        PaymentHistoryDump:REST(/) RabbitMq:SUB(notify)
-        Redis:READ(schedules:*)
+        PaymentHistoryDump:REST(/); RabbitMq:SUB(notify);
+        Redis:READ(schedules:*)(test:*);WRITE(test:*);
       com.microservice.description: |
         Sample.  This is for payment related container
 
@@ -21,7 +21,7 @@ services:
     labels:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
-      com.microservice.depends: Mysql
+      com.microservice.depends: Mysql Redis:WRITE(schedules:*);
       com.microservice.description: |
         Sample.  This is for payment related container
 

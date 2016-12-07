@@ -8,6 +8,7 @@ function DrawObjectWithEvent(name, options){
   }else{
     options['color'] = '#DBBE32'
     options['text-font'] = '16px sans-serif'
+    options['text-is_bold'] = false
   }
   var dCanvas = new SquareWithTitle(name, options)
   var dObj = new DrawObject(name, dCanvas, options)
@@ -18,7 +19,6 @@ function DrawObjectWithEvent(name, options){
     dObj.event_function_register("dragging:clear", draggingClearHandler)
     dObj.event_function_register("mousemove", mouseMoveHandler)
     dObj.event_function_register("mousemove:clear", mouseMoveClearHandler)
-    dObj.canvas.title.is_bold = false
   }
   pallet.add_object(dObj)
   return dObj
@@ -40,9 +40,39 @@ function mouseMoveClearHandler(_this, eventName, eventInfo){
 function clickHandler(_this, eventName, eventInfo){
   moveStart(_this, eventName, eventInfo)
   showTextBox(_this)
+
+  var connections = _this.connections
+  for(var i=0; i<connections.length; i++){
+    if(_this == connections[i].from){
+      showTopicOnConnections([connections[i]], {"color": "blue", "lineWidth": 3})
+    }else{
+      showTopicOnConnections([connections[i]], {"color": "red", "lineWidth": 3})
+    }
+    var sametopic_connections =  find_connection_by_topic(
+        connections[i].to.connections, connections[i].options.topics)
+    showTopicOnConnections(sametopic_connections, {"color": "green", "lineWidth": 3}, _this)
+    for(var j=0; j<sametopic_connections.length; j++){
+      sametopic_connections[j].options.pinned = true
+    }
+    connections[i].options.pinned = true
+  }
+  pallet.render()
 }
 function clickClearHandler(_this, eventName, eventInfo){
   hideTextBox(_this)
+
+  var connections = _this.connections
+  hideTopicOnConnections(connections, true)
+  for(var i=0; i<connections.length; i++){
+    var sametopic_connections =  find_connection_by_topic(
+        connections[i].to.connections, connections[i].options.topics)
+    hideTopicOnConnections(sametopic_connections, true)
+    for(var j=0; j<sametopic_connections.length; j++){
+      sametopic_connections[j].options.pinned = false
+    }
+    connections[i].options.pinned = false
+  }
+  pallet.render()
 }
 function draggingHandler(_this, eventName, eventInfo){
   move(_this, eventName, eventInfo)
@@ -87,13 +117,15 @@ function hideTextBox(_this){
     _this.options['textboxDrawObject'] = null
     pallet.render() 
   }
-  console.log('hide')
 }
 
 
 function connectionHighLight(_this, eventName, _){
   var connections = _this.connections
   for(var i=0; i<connections.length; i++){
+    if(connections[i].options.pinned){
+      continue
+    }
     if(_this == connections[i].from){
       connections[i].highlight({"color": "blue", "lineWidth": 3})
     }else{
@@ -105,11 +137,49 @@ function connectionHighLight(_this, eventName, _){
 function connectionUnHighLight(_this, eventName, _){
   var connections = _this.connections
   for(var i=0; i<connections.length; i++){
-    connections[i].unHighlight()
+    if(connections[i].options.pinned){
+      continue
+    }
+    if(!connections[i].options.pinned){
+      connections[i].unHighlight()
+    }
   }
   pallet.render()
 }
-
+function showTopicOnConnections(connections, highlight, except_obj){
+  for(var i=0; i<connections.length; i++){
+    if(highlight){
+      if(connections[i].to != except_obj &&
+          connections[i].from != except_obj){
+        connections[i].highlight(highlight)
+      }
+    }
+    if(connections[i].options._title && !(connections[i].canvas instanceof ArrowConnectionWithTitle)){
+      if(connections[i].from != except_obj && connections[i].to != except_obj){
+        var strokeStyle = connections[i].canvas.strokeStyle
+        connections[i].canvas = new ArrowConnectionWithTitle(connections[i].options._title)
+        connections[i].canvas.title.color = strokeStyle
+        connections[i].canvas.title.is_bold = false
+      }
+    }
+    if(highlight){
+      if(connections[i].to != except_obj &&
+          connections[i].from != except_obj){
+        connections[i].highlight(highlight)
+      }
+    }
+  }
+}
+function hideTopicOnConnections(connections, unHighlight){
+  for(var i=0; i<connections.length; i++){
+    if(connections[i].options._title && (connections[i].canvas instanceof ArrowConnectionWithTitle)){
+      connections[i].canvas = new ArrowConnection()
+    }
+    if(unHighlight){
+      connections[i].unHighlight()
+    }
+  }
+}
 
 function moveStart(_this, eventName, eventInfo){
   _this['clicked'] = true
@@ -125,4 +195,27 @@ function clearMove(_this, eventName, eventInfo){
   _this['clicked'] = false
   _this['moveStartPoint'] = null
   _this['originalCordinate'] = [_this.canvas.possitionX, _this.canvas.possitionY]
+}
+
+//topics: [['op', 'topic'], ['op1', 'topic1']]
+function find_connection_by_topic(connections, topics){
+  result = []
+  if(!topics){
+    return result
+  }
+  for(var i=0; i<connections.length; i++){
+    if(!connections[i].options.topics){
+      continue
+    }
+    var flg = false
+    for(var j=0; j<connections[i].options.topics.length; j++){
+      if(flg){flg = false; break}
+      for(var k=0; k<topics.length; k++){
+        if(connections[i].options.topics[j][1] == topics[k][1]){
+          result.push(connections[i]); flg = true; break
+        }
+      }
+    }
+  }
+  return result
 }

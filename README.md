@@ -4,4 +4,4 @@
 ![released_create_data](samples/container_visualise_0.5_create_data.gif)
 
 ### 2. Just opened test.html with your browser
-![released](samples/container_visualise_0.5.gif)
+![released](samples/container_visualise_0.6.gif)

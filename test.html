@@ -77,8 +77,18 @@
             console.log('key not found:'+ to)
             continue
           }
+          var con = null
 
-          var con = fromObj.add_connection_to(toObj)
+          if(dependencies[i]['topics'].length > 0){
+            var title = ""
+            for(var k=0; k<dependencies[i]['topics'].length; k++){
+              title += dependencies[i]['topics'][k][0] +'('+ dependencies[i]['topics'][k][1] + ');'
+            }
+            con = fromObj.add_connection_to(
+                toObj, {'_title': title, 'topics': dependencies[i]['topics']})
+          } else {
+            con = fromObj.add_connection_to(toObj)
+          }
           pallet.add_object(con)
         }
 
