@@ -1,3 +1,8 @@
+globals = {
+  "infrontObjects": [],
+  "modal": null,
+  "modalFlag": false
+}
 function DrawObjectWithEvent(name, options){
   if(options['type'] == 'team'){
     options['color'] = '#C9C9AB'
@@ -25,6 +30,9 @@ function DrawObjectWithEvent(name, options){
 }
 
 function mouseMoveHandler(_this, eventName, eventInfo){
+  if(globals['modalFlag']){
+    return false
+  }
   _this.canvas.lineFlag = true
   _this.canvas.lineColor = '#ffffff'
   _this.canvas.lineWidth = 5
@@ -38,24 +46,47 @@ function mouseMoveClearHandler(_this, eventName, eventInfo){
 }
 
 function clickHandler(_this, eventName, eventInfo){
+  if(globals['modalFlag']){
+    return false
+  }
   moveStart(_this, eventName, eventInfo)
   showTextBox(_this)
-
   var connections = _this.connections
+  globals['infrontObjects'].push(_this)
   for(var i=0; i<connections.length; i++){
     if(_this == connections[i].from){
       showTopicOnConnections([connections[i]], {"color": "blue", "lineWidth": 3})
+      globals['infrontObjects'].push(connections[i].to)
     }else{
       showTopicOnConnections([connections[i]], {"color": "red", "lineWidth": 3})
+      globals['infrontObjects'].push(connections[i].from)
     }
     var sametopic_connections =  find_connection_by_topic(
         connections[i].to.connections, connections[i].options.topics)
     showTopicOnConnections(sametopic_connections, {"color": "green", "lineWidth": 3}, _this)
     for(var j=0; j<sametopic_connections.length; j++){
       sametopic_connections[j].options.pinned = true
+      globals['infrontObjects'].push(sametopic_connections[j].to)
     }
     connections[i].options.pinned = true
   }
+
+  var modalBackground = new SquareWithTitle(
+      "", {'color': 'rgb(250, 250, 250)', 'globalAlpha': 0.8, 'x': 0, 'y': 0,
+           'width': 3000, 'height': 2000})
+  modalBackground.z_index = 50
+  modalBackground.z_index_fixed = true
+  var drawObject = new DrawObject()
+  drawObject.canvas = modalBackground
+  globals['modal'] = drawObject
+  globals['modalFlag'] = true
+  pallet.add_object(drawObject)
+
+  for(var i=0; i<globals['infrontObjects'].length;i++){
+    globals['infrontObjects'][i].canvas.z_index = 99
+    globals['infrontObjects'][i].canvas.z_index_fixed = true
+  }
+
   pallet.render()
 }
 function clickClearHandler(_this, eventName, eventInfo){
@@ -72,6 +103,15 @@ function clickClearHandler(_this, eventName, eventInfo){
     }
     connections[i].options.pinned = false
   }
+
+  pallet.remove_object(globals['modal'])
+  globals['modal'] = null
+  globals['modalFlag'] = false
+  for(var i=0; i<globals['infrontObjects'].length;i++){
+    globals['infrontObjects'][i].canvas.z_index_fixed = false
+  }
+  globals['infrontObjects'] = []
+
   pallet.render()
 }
 function draggingHandler(_this, eventName, eventInfo){
