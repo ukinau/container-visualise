@@ -73,7 +73,7 @@ function clickHandler(_this, eventName, eventInfo){
 
   var modalBackground = new SquareWithTitle(
       "", {'color': 'rgb(250, 250, 250)', 'globalAlpha': 0.8, 'x': 0, 'y': 0,
-           'width': 3000, 'height': 2000})
+           'width': 3350, 'height': 2500})
   modalBackground.z_index = 50
   modalBackground.z_index_fixed = true
   var drawObject = new DrawObject()
