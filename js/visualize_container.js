@@ -1,7 +1,5 @@
 globals = {
-  "infrontObjects": [],
-  "modal": null,
-  "modalFlag": false
+  "infrontObjects": [], "modal": null, "modalFlag": false,
 }
 function DrawObjectWithEvent(name, options){
   if(options['type'] == 'team'){
@@ -30,6 +28,7 @@ function DrawObjectWithEvent(name, options){
 }
 
 function mouseMoveHandler(_this, eventName, eventInfo){
+  var s = Date.now()
   if(globals['modalFlag']){
     return false
   }
@@ -37,15 +36,17 @@ function mouseMoveHandler(_this, eventName, eventInfo){
   _this.canvas.lineColor = '#ffffff'
   _this.canvas.lineWidth = 5
   connectionHighLight(_this, eventName, eventInfo)
-  pallet.render()
+  console.log('move', (Date.now()-s)/1000)
 }
 function mouseMoveClearHandler(_this, eventName, eventInfo){
+  var s = Date.now()
   _this.canvas.lineFlag = false
   connectionUnHighLight(_this, eventName, eventInfo)
-  pallet.render()
+  console.log('move:clear', (Date.now()-s)/1000)
 }
 
 function clickHandler(_this, eventName, eventInfo){
+  var s = Date.now()
   if(globals['modalFlag']){
     return false
   }
@@ -87,9 +88,10 @@ function clickHandler(_this, eventName, eventInfo){
     globals['infrontObjects'][i].canvas.z_index_fixed = true
   }
 
-  pallet.render()
+  console.log('click', (Date.now()-s)/1000)
 }
 function clickClearHandler(_this, eventName, eventInfo){
+  var s = Date.now()
   hideTextBox(_this)
 
   var connections = _this.connections
@@ -112,15 +114,19 @@ function clickClearHandler(_this, eventName, eventInfo){
   }
   globals['infrontObjects'] = []
 
-  pallet.render()
+  console.log('click:clear', (Date.now()-s)/1000)
 }
 function draggingHandler(_this, eventName, eventInfo){
+  var s = Date.now()
   move(_this, eventName, eventInfo)
+  console.log('dragging', (Date.now()-s)/1000)
 }
 function draggingClearHandler(_this, eventName, eventInfo){
+  var s = Date.now()
   clearMove(_this, eventName, eventInfo)
   hideTextBox(_this)
   showTextBox(_this)
+  console.log('dragging:clear', (Date.now()-s)/1000)
 }
 
 
@@ -149,13 +155,11 @@ function showTextBox(_this){
   drawObject.canvas = textbox
   _this.options['textboxDrawObject'] = drawObject
   pallet.add_object(drawObject)
-  pallet.render()
 }
 function hideTextBox(_this){
   if(_this.options['textboxDrawObject']){
     pallet.remove_object(_this.options['textboxDrawObject'])
     _this.options['textboxDrawObject'] = null
-    pallet.render() 
   }
 }
 
@@ -172,7 +176,6 @@ function connectionHighLight(_this, eventName, _){
       connections[i].highlight({"color": "red", "lineWidth": 3})
     }
   }
-  pallet.render()
 }
 function connectionUnHighLight(_this, eventName, _){
   var connections = _this.connections
@@ -184,7 +187,6 @@ function connectionUnHighLight(_this, eventName, _){
       connections[i].unHighlight()
     }
   }
-  pallet.render()
 }
 function showTopicOnConnections(connections, highlight, except_obj){
   for(var i=0; i<connections.length; i++){
@@ -229,7 +231,6 @@ function moveStart(_this, eventName, eventInfo){
 function move(_this, eventName, eventInfo){
   _this.canvas.possitionX = _this['originalCordinate'][0] + Number(eventInfo['x']) - Number(_this['moveStartPoint']['x'])
   _this.canvas.possitionY = _this['originalCordinate'][1] + Number(eventInfo['y']) - Number(_this['moveStartPoint']['y'])
-  pallet.render()
 }
 function clearMove(_this, eventName, eventInfo){
   _this['clicked'] = false
@@ -259,3 +260,8 @@ function find_connection_by_topic(connections, topics){
   }
   return result
 }
+
+function redraw(){
+  pallet.render()
+}
+setInterval(redraw, 300)
