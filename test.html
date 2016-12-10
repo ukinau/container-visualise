@@ -31,7 +31,6 @@
         var type = null
         pallet = new Pallet(ctx, canvas)
         for(var i=0; i<service_data.length; i++){
-          console.log(service_data[i]['text'], service_data[i]['loc'], service_data[i]['width'])
           if(service_data[i]['category'] == 'Super'){
             if(service_data[i]['supers'] && service_data[i]['supers'].length > 0){
               type = 'component'
