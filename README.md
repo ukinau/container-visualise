@@ -1,5 +1,14 @@
-# Docker compoe container visualisation tools
-## 1. How to use it
+# Docker compose container visualisation tools
+
+## 1. Sample
+
+Sample diagram by using heroku
+
+[https://container-visualise.herokuapp.com/index.html](https://container-visualise.herokuapp.com/index.html)
+![released](samples/container_visualise_1.0.gif)
+
+
+## 2. How to use it
 ### 0. git clone
 
 ```
@@ -91,7 +100,3 @@ $ python create_data.py --data-output
 ```
 
 ![released_create_data](samples/container_visualise_0.5_create_data.gif)
-
-
-### 4. Just opened test.html with your browser
-![released](samples/container_visualise_1.0.gif)
