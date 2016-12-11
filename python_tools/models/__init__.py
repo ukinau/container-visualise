@@ -1,20 +1,45 @@
-from .dependency import Dependency  
+import re
+from .dependency import Dependency
 from .service import Service
 from .team import Team
 from .service_group import ServiceGroup
 from ..common import get_something_from_label
-
+from collections import defaultdict
 import yaml
 
 
-def is_volume_container(component_info, shared=False):
-    return 'volumes' in component_info and shared
+def get_volume_containers(component_info):
+    result = []
+    if 'volumes_from' not in component_info:
+        return set(result)
+    for v in component_info['volumes_from']:
+        if not re.search(r':', v):
+            result.append(v)
+    return set(result)
+
+# Move volume container from normal group to special group
+# which is named as Volumes
+def move_volumes_from_sg(team_volumes_map):
+    i = 0;
+    for team, c_name_set in team_volumes_map.iteritems():
+        i += 1
+        for c_name in c_name_set:
+            sv = Service.find_service_by_name(c_name)
+            if sv is None:
+                print "not found service: %s" % c_name
+                continue
+            component_group_obj = ServiceGroup.create("Volumes"+str(i))
+            team.add_service(component_group_obj)
+            sv.parent.remove_child_by_key(sv.key)
+            component_group_obj.add_chidren(sv)
 
 def load_teams_and_services(file_name, shared=False):
     """ Initialize Team.TEAM_LIST
     """
     docker_compose_fd = open(file_name)
     docker_compose_data = yaml.load(docker_compose_fd)
+
+    team_volumes_map = defaultdict(set)
 
     for component_name, info in docker_compose_data['services'].iteritems():
         team = get_something_from_label(info, 'team', 'unassign')
@@ -28,3 +53,6 @@ def load_teams_and_services(file_name, shared=False):
         team_obj.add_service(component_group_obj)
         component = Service.create_service(component_name, description, dependencies)
         component_group_obj.add_chidren(component)
+        team_volumes_map[team_obj] |= get_volume_containers(info)
+
+    move_volumes_from_sg(team_volumes_map)

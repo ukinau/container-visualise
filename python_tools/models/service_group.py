@@ -10,7 +10,15 @@ class ServiceGroup(object):
     self.drawable = None
 
   def add_chidren(self, service):
+      service.parent = self
       self.children.append(service)
+
+  def remove_child_by_key(self, key):
+      for i, sv in enumerate(self.children):
+          if sv.key == key:
+              del self.children[i]
+              return True
+      return False
 
   def most_longname_service(self):
       most_long = self
