@@ -10,6 +10,7 @@ class Service(object):
       self.key = "sv" + str(len(Service.SERVICE_LIST))
       Service.SERVICE_LIST.append(self)
       self.drawable = None
+      self.parent = None
 
   def add_reffered_from(self, service):
       self.reffered_from.append(service)
