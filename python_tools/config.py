@@ -1,6 +1,6 @@
 FILE_NAME = 'base_compose_files/test.yaml'
 FILE_NAME_SV = 'base_compose_files/test-service.yaml'
-DEFAULT_BASE_OUTPUT_FILE = 'data/data'
+DEFAULT_BASE_OUTPUT_FILE = 'js/data/data'
 
 total_width = 3000
 team_margin_left = 120
