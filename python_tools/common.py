@@ -1,8 +1,11 @@
-def get_something_from_label(info, something):
+def get_something_from_label(info, something, default=""):
+    if 'labels' not in info \
+            or not isinstance(info['labels'], dict):
+        return default
     for key, value in info['labels'].iteritems():
         if key.split('.')[-1] == something:
             return value
-    return ""
+    return default
 
 def create_drawable_object(service, team=None,supers=None, loc=None, category_super=False, width=None):
      result = {

@@ -6,7 +6,7 @@ class Team(object):
       self.description = ""
       self.shared_service_maintainer = shared_service_maintainer 
       self.wide_rate = 0
-      self.key = None
+      self.key = 'team'+ str(len(Team.TEAM_LIST))
       self.drawable = None
 
   def add_service(self, service):
