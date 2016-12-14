@@ -5,6 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <!--  https://github.com/ukinau/recognisedCanvasJs  -->
     <script src="https://raw.githack.com/ukinau/recognisedCanvasJs/master/dist/recognised-canvasjs.js"></script>
+    <script src="js/common.js"></script>
     <script src="js/visualize_container.js"></script>
     <script src="js/data/data_service_data.js"></script>
     <script src="js/data/data_dependencies.js"></script>
@@ -92,6 +93,7 @@
           pallet.add_object(con)
         }
 
+        initLeftTextbox("")
         pallet.render()
         pallet.setMouseEventToDocument(document)
       }
