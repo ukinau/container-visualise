@@ -20,7 +20,8 @@ first_teams = copy(Team.get_teams())
 
 drawable.calculate_occupation_rate_of_team(first_teams)
 result_array += drawable.get_graph_data_with_vertical_by_team(
-            first_teams, 400, 100)
+            first_teams, start_axis_first_line[0],
+            start_axis_first_line[1])
 
 
 load_teams_and_services(FILE_NAME)
@@ -29,7 +30,8 @@ second_teams = set(all_teams) - set(first_teams)
 
 drawable.calculate_occupation_rate_of_team(second_teams)
 result_array += drawable.get_graph_data_with_vertical_by_team(
-            second_teams, 100, 400)
+            second_teams, start_axis_second_line[0],
+            start_axis_second_line[1])
 
 
 if __name__ == '__main__':
