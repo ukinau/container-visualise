@@ -47,10 +47,7 @@ function showDependenciesDetail(_this){
   body += "\n**** Depend ****\n"
   var indent = "  "
   for(var i = 0; i<_this.connections.length; i++){
-    if(_this.connections[i].to == _this){
-      reffered_list.push(_this.connections[i])
-      continue
-    }
+    if(_this.connections[i].to == _this){ reffered_list.push(_this.connections[i]); continue }
     if(_this.connections[i].options.topics){
       var con = _this.connections[i]
       body += "<color>(#003aff)" + indent + con.to.id + '\n'
@@ -80,6 +77,7 @@ function showDependenciesDetail(_this){
     var con = reffered_list[i]
     if(con.options.topics){
       for(var j=0; j<con.options.topics.length; j++){
+        var topic = con.options.topics[j]
         body += "<color>(#ff2d00)" + indent + con.to.id + ':' + topic[0] + '(' + topic[1] + ')' + '\n'
       }
     }else{
@@ -93,37 +91,46 @@ function showDependenciesDetail(_this){
 function connectionHighLight(_this, eventName, _){
   var connections = _this.connections
   for(var i=0; i<connections.length; i++){
-    if(connections[i].options.pinned){ continue }
     if(_this == connections[i].from){
       connections[i].highlight({"color": "blue", "lineWidth": 3})
+      highLightDrawObject(connections[i].to, "blue")
     }else{
       connections[i].highlight({"color": "red", "lineWidth": 3})
+      highLightDrawObject(connections[i].from, "red")
     }
     var sametopic_connections =  find_connection_by_topic(
         connections[i].to.connections, connections[i].options.topics,
         function(connection){if(connection.to != _this && connection.from != _this){return true}})
     for(var j=0; j<sametopic_connections.length; j++){
       sametopic_connections[j][1].highlight({"color": "green", "lineWidth": 3})
+      highLightDrawObject(sametopic_connections[j][1].from, "green")
     }
   }
 }
 function connectionUnHighLight(_this, eventName, _){
   var connections = _this.connections
   for(var i=0; i<connections.length; i++){
-    if(connections[i].options.pinned){
-      continue
-    }
-    if(!connections[i].options.pinned){
-      connections[i].unHighlight()
-    }
+    connections[i].unHighlight()
+    unHighlightDrawObject(connections[i].to)
+    unHighlightDrawObject(connections[i].from)
     var sametopic_connections =  find_connection_by_topic(
         connections[i].to.connections, connections[i].options.topics,
         function(connection){if(connection.to != _this && connection.from != _this){return true}})
     for(var j=0; j<sametopic_connections.length; j++){
       sametopic_connections[j][1].unHighlight()
+      unHighlightDrawObject(sametopic_connections[j][1].from)
     }
   }
 }
+function highLightDrawObject(drawObject, color){
+  drawObject.canvas.lineFlag = true
+  drawObject.canvas.lineColor = color
+  drawObject.canvas.lineWidth = 5
+}
+function unHighlightDrawObject(drawObject){
+  drawObject.canvas.lineFlag = false
+}
+
 function showTopicOnConnections(connections, highlight, except_obj){
   for(var i=0; i<connections.length; i++){
     if(highlight){
