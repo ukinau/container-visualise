@@ -42,7 +42,10 @@ function mouseMoveHandler(_this, eventName, eventInfo){
 }
 function mouseMoveClearHandler(_this, eventName, eventInfo){
   var s = Date.now()
-  _this.canvas.lineFlag = false
+  if(globals['modalFlag']){
+    return false
+  }
+  unHighlightDrawObject(_this)
   connectionUnHighLight(_this, eventName, eventInfo)
   console.log('move:clear', (Date.now()-s)/1000)
 }
@@ -60,21 +63,20 @@ function clickHandler(_this, eventName, eventInfo){
     if(_this == connections[i].from){
       connections[i].highlight({"color": "blue", "lineWidth": 3})
       globals['infrontObjects'].push(connections[i].to)
+      highLightDrawObject(connections[i].to, "blue")
     }else{
       connections[i].highlight({"color": "red", "lineWidth": 3})
       globals['infrontObjects'].push(connections[i].from)
+      highLightDrawObject(connections[i].from, "red")
     }
     var sametopic_connections =  find_connection_by_topic(
         connections[i].to.connections, connections[i].options.topics,
         function(connection){if(connection.to != _this && connection.from != _this){return true}})
     for(var j=0; j<sametopic_connections.length; j++){
       sametopic_connections[j][1].highlight({"color": "green", "lineWidth": 3})
-    }
-    for(var j=0; j<sametopic_connections.length; j++){
-      sametopic_connections[j][1].options.pinned = true
       globals['infrontObjects'].push(sametopic_connections[j][1].to)
+      highLightDrawObject(sametopic_connections[j][1].from, "green")
     }
-    connections[i].options.pinned = true
   }
 
   var modalBackground = new SquareWithTitle(
@@ -92,23 +94,24 @@ function clickHandler(_this, eventName, eventInfo){
     globals['infrontObjects'][i].canvas.z_index = 99
     globals['infrontObjects'][i].canvas.z_index_fixed = true
   }
-
+  showDependenciesDetail(_this)
   console.log('click', (Date.now()-s)/1000)
 }
 function clickClearHandler(_this, eventName, eventInfo){
   var s = Date.now()
   //hideTextBox(_this)
-
+  unHighlightDrawObject(_this)
   var connections = _this.connections
   for(var i=0; i<connections.length; i++){
     connections[i].unHighlight()
+    unHighlightDrawObject(connections[i].to)
+    unHighlightDrawObject(connections[i].from)
     var sametopic_connections =  find_connection_by_topic(
         connections[i].to.connections, connections[i].options.topics)
     for(var j=0; j<sametopic_connections.length; j++){
-      sametopic_connections[j][1].options.pinned = false
       sametopic_connections[j][1].unHighlight()
+      unHighlightDrawObject(sametopic_connections[j][1].from)
     }
-    connections[i].options.pinned = false
   }
 
   pallet.remove_object(globals['modal'])
