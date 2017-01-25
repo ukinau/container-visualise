@@ -38,24 +38,23 @@ function hideTextBox(_this){
  * * -> <operation> (target):<container-name>
  */
 function showDependenciesDetail(_this){
-  var body = "\n<font>(30px sans-serif)" + _this.id + '\n\n'
+  var body = "\n\n<font>(40px chalkboard)" + _this.id + '</font>\n'
   var reffered_list = []  
-  body += "\n**** Description ****\n"
-  body += _this.options['description']
+body += "<font>(30px chalkboard)Description: </font>\n"
+  body += _this.options['description'] + '\n\n'
 
-
-  body += "\n**** Depend ****\n"
+  body += "<font>(30px chalkboard)Depend:</font>\n"
   var indent = "  "
   for(var i = 0; i<_this.connections.length; i++){
     if(_this.connections[i].to == _this){ reffered_list.push(_this.connections[i]); continue }
     if(_this.connections[i].options.topics){
       var con = _this.connections[i]
-      body += "<color>(#003aff)" + indent + con.to.id + '\n'
+      body += "<color>(#003aff)" + indent + "*" +con.to.id + '</color>\n'
       for(var j=0; j<con.options.topics.length; j++){
         var topic_tree_simbol = "┣"
         if(j == con.options.topics.length - 1){topic_tree_simbol= "┗"}
         var topic = con.options.topics[j]
-        body += "<color>(#96b8f3)"+indent + topic_tree_simbol + topic[0] + '(' + topic[1] + ')' + '\n'
+        body += "<color>(#003aff) "+indent + topic_tree_simbol + topic[0] + '(' + topic[1] + ')' + '</color>\n'
         var same_cons = find_connection_by_topic(con.to.connections, [topic],
            function(c){if(c.to != _this && c.from != _this && c.to == con.to){return true}})
         for(var k=0; k<same_cons.length; k++){
@@ -64,24 +63,24 @@ function showDependenciesDetail(_this){
           if(k == same_cons.length - 1){tree_simbol= "┗"}
           if(topic_tree_simbol == "┗"){left_tree = "  "}
           same_cons_topic = same_cons[k][0]
-          body += "<color>(#12a004)"+ indent + left_tree + tree_simbol + same_cons[k][1].from.id
-          body += ':'+ same_cons_topic[0] + '(' + same_cons_topic[1] + ')' + '\n'
+          body += "<color>(#12a004) "+ indent + "<color>(#003aff)" +left_tree + "</color>" + tree_simbol + same_cons[k][1].from.id
+          body += ':'+ same_cons_topic[0] + '(' + same_cons_topic[1] + ')' + '</color>\n'
         }
       }
     }else{
-      body += "<color>(#003aff)"+indent + _this.connections[i].to.id + '\n'
+      body += "<color>(#003aff)"+indent +"*"+ _this.connections[i].to.id + '</color>\n'
     }
   }
-  body += "\n**** Referred ****\n"
+  body += "\n<font>(30px chalkboard)Referred:</font>\n"
   for(var i=0; i<reffered_list.length; i++){
     var con = reffered_list[i]
     if(con.options.topics){
       for(var j=0; j<con.options.topics.length; j++){
         var topic = con.options.topics[j]
-        body += "<color>(#ff2d00)" + indent + con.to.id + ':' + topic[0] + '(' + topic[1] + ')' + '\n'
+        body += "<color>(#ff2d00)" + indent +"*"+ con.to.id + ':' + topic[0] + '(' + topic[1] + ')' + '</color>\n'
       }
     }else{
-      body += "<color>(#ff2d00)" + indent + con.from.id + '\n'
+      body += "<color>(#ff2d00)" + indent +"*"+ con.from.id + '</color>\n'
     }
   }
   updateLeftTextbox(body)
