@@ -20,9 +20,9 @@ $ git clone https://github.com/ukinau/container-visualise.git
 ```
 ├── base_compose_files    (you need to put docker-compose.yaml file into this directory)
 │   ├── test-service.yaml (which is displayed always top. the component everyone used should be here like mysql/kafka)
-│   └── test.yaml         (the component each team has should be here) 
+│   └── test.yaml         (the component each team has should be here)
 ├── create_data.py        (This is comand line tools to generate graph data based on docker-compose.yaml)
-├── python_tools          (internal used to store the dependencies program of **create_data.py**) 
+├── python_tools          (internal used to store the dependencies program of **create_data.py**)
 ├── data   (internal used to store the graph data)
 ├── js     (to display graph)
 |__ test.html (html file)
@@ -69,28 +69,24 @@ canvas
 
 ```
 
-- \<domain\>.team
+- **\<domain\>.team**
   - This is outest block
-- \<domain\>.component
-  - This is sencond level block, which means all component are enclosed in one of the teams  
-- \<domain\>.description
+- **\<domain\>.component**
+  - This is sencond level block, which means all component are enclosed in one of the teams
+- **\<domain\>.description**
   - This should be described about short description about this container
-- \<domain\>.depends
-  - This should be described about depenendices about which/how container This depends.
-  - Each dependencies entry is consist of 2 types of elements and should be separated by **" "** or **\n**
-    - \<container\>:\<dependency\>;\<dependency\>;
-    - \<container\>
-      - the name of container like MysqlContainer
-    - \<dependency\> is consist of \<opertarion\>(\<topic\>)(\<topic\>);
-      - \<dependency\> express about how this depends 
-      - \<opertarion\> is which type of operation this execute like Read or Write, arbitary name is allowed 
-      - \<topic\> is the target of operation, if it's db, it will be database name else if Kafka it will be topic name
-        - we can pass muliple topic against 1 operation
-      - each depenedcy should be delimited by **;** 
+- **\<domain\>.depends**
+  - This should be described about the dependencies as a yaml string
   - Sample depends definition
 ```
-Mysql:READ(TestDB);Write(TestDB);
-Kafka:PUB(testA);SUB(testB);
+ComponentName:
+  Operation1: ["topic1", "topic2"]
+Mysql:
+  READ: ["TestDB"]
+  WRITE: ["TestDB"]
+Kafka:
+  PUB: ["testA"]
+  SUB: ["testB"]
 ```
 
 ### 3. Generate graph data

@@ -10,8 +10,11 @@ services:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
       com.microservice.depends: |
-        PaymentHistoryDump:REST(/); RabbitMq:SUB(notify);
-        Redis:READ(schedules:*)(test:*);WRITE(test:*);
+        RabbitMq:
+          SUB: ["notify"]
+        Redis:
+          READ: ["schedules:*", "test:*"]
+          WRITE: ["test:*"]
       com.microservice.description: |
         Sample.  This is for payment related container
 
@@ -21,7 +24,10 @@ services:
     labels:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
-      com.microservice.depends: Mysql Redis:WRITE(schedules:*);
+      com.microservice.depends: |
+        Mysq: null
+        Redis:
+          WRITE: ["schedules:*"]
       com.microservice.description: |
         Sample.  This is for payment related container
 
@@ -31,7 +37,9 @@ services:
     labels:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
-      com.microservice.depends: RabbitMq PaymentAgent
+      com.microservice.depends: |
+        RabbitMq: null
+        PaymentAgent: null
       com.microservice.description: |
         Sample.  This is for payment related container
 
@@ -41,7 +49,10 @@ services:
     labels:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
-      com.microservice.depends: RabbitMq
+      com.microservice.depends: |
+        RabbitMq: null
+        Redis:
+          WRITE: ["schedules:*"]
       com.microservice.description: |
         Sample.  This is for payment related container
 
@@ -52,7 +63,9 @@ services:
     labels:
       com.microservice.team: "devteamB"
       com.microservice.component: "Order"
-      com.microservice.depends: PaymentMangeer Mysql
+      com.microservice.depends: |
+        PaymentMangeer: null
+        Mysql: null
       com.microservice.description: |
         Sample.  This is for order related container
 
@@ -61,7 +74,9 @@ services:
     labels:
       com.microservice.team: "devteamB"
       com.microservice.component: "Order"
-      com.microservice.depends: RabbitMq OrderManager
+      com.microservice.depends: |
+        RabbitMq: null
+        OrderManager: null
       com.microservice.description: |
         Sample.  This is for order related container
     
@@ -70,7 +85,9 @@ services:
     labels:
       com.microservice.team: "devteamB"
       com.microservice.component: "Order"
-      com.microservice.depends: Mysql Redis
+      com.microservice.depends: |
+        Mysql: null
+        Redis: null
       com.microservice.description: |
         Sample.  This is for order related container
 
@@ -79,7 +96,8 @@ services:
     labels:
       com.microservice.team: "devteamC"
       com.microservice.component: "Item"
-      com.microservice.depends: Mysql
+      com.microservice.depends: |
+        Mysql: null
       com.microservice.description: |
         Sample.  This is for item related container
 
@@ -88,7 +106,8 @@ services:
     labels:
       com.microservice.team: "devteamC"
       com.microservice.component: "Item"
-      com.microservice.depends: ItemManager
+      com.microservice.depends: |
+        ItemManager: null
       com.microservice.description: |
         Sample.  This is for item related container
 
@@ -98,7 +117,9 @@ services:
     labels:
       com.microservice.team: "devteamC"
       com.microservice.component: "Auth"
-      com.microservice.depends: Mysql Vault
+      com.microservice.depends: |
+        Mysql: null
+        Vault: null
       com.microservice.description: |
         Sample.  This is for item related container
 
@@ -107,6 +128,8 @@ services:
     labels:
       com.microservice.team: "devteamC"
       com.microservice.component: "Auth"
-      com.microservice.depends: Mysql Authenticator
+      com.microservice.depends: |
+        Mysql: null
+        Authenticator: null
       com.microservice.description: |
         Sample.  This is for item related container

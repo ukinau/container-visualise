@@ -74,7 +74,7 @@ function clickHandler(_this, eventName, eventInfo){
         function(connection){if(connection.to != _this && connection.from != _this){return true}})
     for(var j=0; j<sametopic_connections.length; j++){
       sametopic_connections[j][1].highlight({"color": "green", "lineWidth": 3})
-      globals['infrontObjects'].push(sametopic_connections[j][1].to)
+      globals['infrontObjects'].push(sametopic_connections[j][1].from)
       highLightDrawObject(sametopic_connections[j][1].from, "green")
     }
   }
