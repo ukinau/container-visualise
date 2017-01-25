@@ -47,7 +47,9 @@ services:
     restart: always
     labels:
       com.microservice.team: "SysAdmin"
-      com.microservice.depends: RabbitMq Redis
+      com.microservice.depends: |
+        RabbitMq: null
+        Redis: null
       com.microservice.component: "Common"
       com.microservice.description: |
         This have responsible for the monitoring for infrastracture
