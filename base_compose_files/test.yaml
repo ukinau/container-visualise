@@ -41,7 +41,9 @@ services:
     labels:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
-      com.microservice.depends: RabbitMq
+      com.microservice.depends: |
+        RabbitMq
+        Redis:WRITE(schedules:*);
       com.microservice.description: |
         Sample.  This is for payment related container
 
