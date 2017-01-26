@@ -32,11 +32,11 @@ function hideTextBox(_this){
 }
 
 function add_title(_this, body){
-  body.push("\n\n<font>(40px chalkboard)" + _this.id + '</font>\n')
+  body.push("\n<font>(40px chalkboard)" + _this.id + '</font>\n\n')
 }
 function add_description(_this, body){
   body.push("<font>(30px chalkboard)Description: </font>\n")
-  body.push(_this.options['description'] + '\n\n')
+  body.push(_this.options['description'] + '\n')
 }
 function add_depends(_this, body, reffered_list){
   body.push("<font>(30px chalkboard)Depend:</font>\n")
@@ -50,7 +50,7 @@ function add_depends(_this, body, reffered_list){
         var topic_tree_simbol = "┣"
         if(j == con.options.topics.length - 1){topic_tree_simbol= "┗"}
         var topic = con.options.topics[j]
-        body.push("<color>(#003aff) "+indent + topic_tree_simbol + topic[0] + '(' + topic[1] + ')' + '</color>\n')
+        body.push("<color>(#003aff) "+indent + topic_tree_simbol + topic[0] + '<' + topic[1] + '>' + '</color>\n')
         var same_cons = find_connection_by_topic(con.to.connections, [topic],
            function(c){if(c.to != _this && c.from != _this && c.to == con.to){return true}})
         for(var k=0; k<same_cons.length; k++){
@@ -60,11 +60,11 @@ function add_depends(_this, body, reffered_list){
           if(topic_tree_simbol == "┗"){left_tree = "  "}
           var same_cons_topic = same_cons[k][2]
           body.push("<color>(#12a004) "+ indent + "<color>(#003aff)" +left_tree + "</color>" + tree_simbol + same_cons[k][1].from.id)
-          body.push(':'+ same_cons_topic[0] + '(' + same_cons_topic[1] + ')' + '</color>\n')
+          body.push(':'+ same_cons_topic[0] + '<' + same_cons_topic[1] + '>' + '</color>\n')
         }
       }
     }else{
-      body.push("<color>(#003aff)"+indent +"*"+ _this.connections[i].to.id + '</color>\n')
+      body.push("\n<color>(#003aff)"+indent +"*"+ _this.connections[i].to.id + '</color>\n')
     }
   }
 }
@@ -92,10 +92,10 @@ function sort_reffered_connection(reffered_list){
         result[topic_op][topic_dest].push(con.from.id)
       }
     }else{
-      if(!("unassignment-interface" in result)){
-        result["unassignment-interface"]={"unassignment-topic":[]}
+      if(!("unassignment" in result)){
+        result["NONE"]={"topic":[]}
       }
-      result["unassignment-interface"]["unassignment-topic"].push(con.from.id)
+      result["NONE"]["topic"].push(con.from.id)
     }
   }
   return result
@@ -127,7 +127,7 @@ function showDependenciesDetail(_this){
       if(index==(Object.keys(sorted_reffered[operation]).length-1)){
         topic_tree_simbol= "┗"
       }
-      body += "<color>(#ff2d00)" + indent + topic_tree_simbol + topic + '</color>\n'
+      body += "<color>(#ff2d00)" + indent + topic_tree_simbol + "<" +topic + ">"+'</color>\n'
       for(var i=0; i<sorted_reffered[operation][topic].length; i++){
         var component_name = sorted_reffered[operation][topic][i]
         var tree_simbol = "┣"
@@ -272,8 +272,8 @@ function initLeftTextbox(body){
   textbox.possitionX = 25
   textbox.possitionY = 25
 
-  textbox.width = 500
-  textbox.height = 1400
+  textbox.width = 600
+  textbox.height = 2450
   textbox.color = "rgb(250, 250, 250)"
   textbox.globalAlpha = 0.8
   textbox.text.font = "20px sans-serif"

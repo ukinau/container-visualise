@@ -16,5 +16,5 @@ shared_height_volumes = 100
 shared_height_containers = 220
 shared_left = 400
 
-start_axis_first_line = [600, 100]
-start_axis_second_line = [600, 400]
+start_axis_first_line = [800, 100]
+start_axis_second_line = [700, 400]
