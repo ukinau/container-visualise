@@ -1,10 +1,10 @@
-
+import uuid
 class ServiceGroup(object):
   LIST = list()
   def __init__(self, name, description=""):
     self.name = name
     self.children = list()
-    self.key = "sg"+str(len(ServiceGroup.LIST))
+    self.key = "sg"+str(uuid.uuid4())
     self.description = description
     ServiceGroup.LIST.append(self)
     self.drawable = None

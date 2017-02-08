@@ -5,6 +5,7 @@ from .team import Team
 from .service_group import ServiceGroup
 from ..common import get_something_from_label
 from collections import defaultdict
+from copy import deepcopy
 import yaml
 
 
@@ -16,6 +17,20 @@ def get_volume_containers(component_info, component):
         if not re.search(r':', v):
             result.append((component, v))
     return set(result)
+
+def clean_empty_super():  
+    delete_team = []
+    for team in Team.get_teams():
+        delete_sg = []
+        for sg in team.services:    
+            if len(sg.children) == 0:
+                delete_sg.append(sg)
+        for del_sg in delete_sg:
+            team.services.remove(del_sg)
+        if len(team.services) == 0:
+            delete_team.append(team)
+    for del_tm in delete_team:
+        Team.get_teams().remove(del_tm)
 
 # Move volume container from normal group to special group
 # which is named as Volumes
@@ -65,3 +80,4 @@ def load_teams_and_services(file_name, shared=False):
         team_volumes_map[team_obj] |= get_volume_containers(info, component)
 
     move_volumes_from_sg(team_volumes_map)
+    clean_empty_super()

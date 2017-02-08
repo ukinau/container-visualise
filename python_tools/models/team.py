@@ -1,3 +1,4 @@
+import uuid
 class Team(object):
   TEAM_LIST = list() 
   def __init__(self, name, shared_service_maintainer=False): 
@@ -6,7 +7,7 @@ class Team(object):
       self.description = ""
       self.shared_service_maintainer = shared_service_maintainer 
       self.wide_rate = 0
-      self.key = 'team'+ str(len(Team.TEAM_LIST))
+      self.key = 'team'+ str(uuid.uuid4())
       self.drawable = None
 
   def add_service(self, service):
