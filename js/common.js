@@ -264,7 +264,7 @@ function find_connection_by_topic(connections, topics, filter){
 
 //topic: ['op', 'topic']
 function compare_topic(src_topic, target_topic){
-  return src_topic[1] == target_topic[1]
+  return (src_topic[1] == target_topic[1]) && (src_topic[0] != target_topic[0])
 }
 
 function initLeftTextbox(body){
