@@ -21,6 +21,27 @@ def create_drawable_object(service, team=None,supers=None, loc=None, category_su
      service.drawable = result
      return result
 
+
+def get_rooms(drawable_array, start_x, end_x):
+    result = []
+    sorted_array = sort_highest(drawable_array)
+    # fisrt candidate
+    result.append((start_x,))
+    
+
+def sort_highest(drawable_array):
+     result = list()
+     for draw in drawable_array:
+         inserted = False
+         height = draw['loc'].split(' ')[1]
+         for candidate in result:
+             c_height = candidate['loc'].split(' ')[1]
+             if int(c_height) < int(height):
+                 result.insert(result.index(candidate), draw)
+                 inserted = True
+         if not inserted:
+             result.append(draw)
+
 def print_help():
     print('Usage: python create_data.py')
     print(' Args:')

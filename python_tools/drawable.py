@@ -24,19 +24,25 @@ def get_graph_data_with_vertical_by_team(
         current_horizontal_point, current_vertical_point):
   result_array = []
   for team in teams:
+    ####
+    ## For team
+    ####
     team_box_width = total_width * team.wide_rate
     current_horizontal_point_maximum = current_horizontal_point + team_box_width
     sc_current_horizontal_point = current_horizontal_point
     sc_height = current_vertical_point
     most_sc_height = 0
     sc_left = sc_current_horizontal_point + box_margin_left
-
+    # team drwable object
     result = create_drawable_object(
             team,
             loc=str(sc_current_horizontal_point)+' '+str(sc_height),
             category_super=True, width=team_box_width)
     result_array.append(result)
 
+    ####
+    ## For service component
+    ####
     sc_w_q = copy(team.services)
     sc_check_q = list()
     while len(sc_w_q) > 0:
@@ -64,6 +70,7 @@ def get_graph_data_with_vertical_by_team(
                 sc_check_q.append(sc)
             sc_w_q.insert(0, sc)
             continue
+        # service component drwable object
         result = create_drawable_object(
                 sc, team, [team.key],
                 loc=str(sc_left)+' '+str(sc_height),
@@ -71,6 +78,9 @@ def get_graph_data_with_vertical_by_team(
                 width=sc_width)
         result_array.append(result)
 
+        ####
+        ## For container
+        ####
         sc_inner_height = sc_height
         sc_inner_left = sc_left
         s_w_q = copy(sc.children)
@@ -88,6 +98,7 @@ def get_graph_data_with_vertical_by_team(
                 s_w_q.insert(0, service)
                 continue
             else:
+                # container drwable object
                 result = create_drawable_object(service, team,[sc.key],
                     str(sc_inner_left) +" "+ str(sc_inner_height), width=s_long)
                 result_array.append(result)
