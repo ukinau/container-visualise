@@ -25,7 +25,7 @@ services:
       com.microservice.team: "devteamA"
       com.microservice.component: "Payment"
       com.microservice.depends: |
-        Mysq: null
+        Mysql: null
         Redis:
           WRITE: ["schedules:*"]
       com.microservice.description: |

@@ -1,7 +1,7 @@
-#FILE_NAME = 'base_compose_files/test.yaml'
-FILE_NAME = 'base_compose_files/docker-compose.yaml'
-#FILE_NAME_SV = 'base_compose_files/test-service.yaml'
-FILE_NAME_SV = 'base_compose_files/docker-compose-services.yaml'
+FILE_NAME = 'base_compose_files/test.yaml'
+#FILE_NAME = 'base_compose_files/docker-compose.yaml'
+FILE_NAME_SV = 'base_compose_files/test-service.yaml'
+#FILE_NAME_SV = 'base_compose_files/docker-compose-services.yaml'
 DEFAULT_BASE_OUTPUT_FILE = 'js/data/data'
 
 total_width = 2000
